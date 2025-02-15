@@ -5,35 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ESB</title> 
     <link rel="stylesheet" href="styles.css">
+    <style>
+            body, html {
+                height: 100%;
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+            }
+            .content {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            main {
+                flex: 1;
+            }
+            footer {
+                display: flex;
+                /* justify-content: flex-end; */
+                justify-content: center;
+                padding: 10px;
+                /* background: #f1f1f1; */
+            }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>English Study</h1> 
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="help.html">Help</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <section>
-            <h2>About Me</h2>
-            <p>Hi there! My name is Mykola. I've been learning English for 3 years and I've always enjoyed sharing my knowledge and experiences with others. 
-               This blog is my space to share tips, tricks, and insights on my English learning journey. 
-               Whether you're a beginner or an advanced learner, I hope you'll find something useful here.</p>
-        </section>
-        <section>
-            <h2>Let's Connect!</h2>
-            <ul>
-                <li>avanti.dev.pro@gmail.com</li>
-                <li><a href="https://x.com/nico_ua_dev">twitter(X)</a></li>
-            </ul>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2025 Telychko Mykola. All rights reserved.</p>
-    </footer>
+    <div class="content">
+        <header>
+            <h1>English Study</h1> 
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="help.html">Help</a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <section>
+                <h2>About Me</h2>
+                <p>Hi there! My name is Mykola. I've been learning English for 3 years and I've always enjoyed sharing my knowledge and experiences with others. 
+                This blog is my space to share tips, tricks, and insights on my English learning journey. 
+                Whether you're a beginner or an advanced learner, I hope you'll find something useful here.</p>
+            </section>
+            <section>
+                <h2>Let's Connect!</h2>
+                <ul>
+                    <li>avanti.dev.pro@gmail.com</li>
+                    <li><a href="https://x.com/nico_ua_dev">twitter(X)</a></li>
+                </ul>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Telychko Mykola. All rights reserved.</p>
+        </footer>
+    </div>
 </body>
 </html>
