@@ -1,3 +1,7 @@
 - theme page like stuff for other pages 
 
 - to daily english <a href="page/d4.html">weekend planning</a> /
+
+- change column title description on links
+
+- change footer in ulink.html
