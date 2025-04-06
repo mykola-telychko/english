@@ -13,11 +13,13 @@ https://www.washingtonpost.com/news/acts-of-faith/wp/2018/02/08/national-prayer-
 
 Top Ten Most Influential U.S. Presidential Speeches
 
-Abraham Lincoln's "Gettysburg Address" (1863)
+(-- DONE ) Abraham Lincoln's "Gettysburg Address" (1863) 
 In just 272 words, Lincoln redefined the purpose of the Civil War and American democracy with phrases like "government of the people, by the people, for the people." Delivered at the dedication of the Soldiers' National Cemetery in Gettysburg.
 
 Franklin D. Roosevelt's "First Inaugural Address" (1933)
 Amidst the Great Depression, FDR restored hope with his declaration that "the only thing we have to fear is fear itself," setting the tone for his presidency and the New Deal programs.
+
+
 John F. Kennedy's "Inaugural Address" (1961)
 Kennedy inspired a generation with his call to public service: "Ask not what your country can do for you—ask what you can do for your country," launching the idealism of the 1960s.
 Martin Luther King Jr.'s "I Have a Dream" (1963)
