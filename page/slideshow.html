@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Study Gallery</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        
+        .content {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+        }
+        
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+        
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex: 1;
+        }
+        
+        .gallery-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        select {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        button {
+            padding: 8px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #555;
+        }
+        
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .gallery-item {
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .gallery-item-info {
+            padding: 15px;
+        }
+        
+        .gallery-item-info h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .gallery-item-info p {
+            color: #666;
+        }
+        
+        .slideshow-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .slideshow-content {
+            position: relative;
+            max-width: 80%;
+            max-height: 80%;
+        }
+        
+        .slideshow-content img {
+            max-width: 100%;
+            max-height: 80vh;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .slideshow-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+        
+        .slideshow-nav button {
+            background: rgba(255,255,255,0.3);
+            border: none;
+            color: white;
+            font-size: 24px;
+            padding: 15px;
+            cursor: pointer;
+        }
+        
+        .close-slideshow {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+            margin-top: 40px;
+        }
+        
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <header>
+            <h1>English Study Gallery</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#">Gallery</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <main>
+            <div class="gallery-controls">
+                <div class="filter-group">
+                    <label for="content-filter">Filter by type:</label>
+                    <select id="content-filter">
+                        <option value="all">All Content</option>
+                        <option value="vocabulary">Vocabulary</option>
+                        <option value="grammar">Grammar</option>
+                        <option value="pronunciation">Pronunciation</option>
+                    </select>
+                </div>
+                <button id="start-slideshow">Start Slideshow</button>
+            </div>
+            
+            <div class="gallery-container" id="gallery-container">
+                <!-- Gallery items will be inserted here by JavaScript -->
+            </div>
+        </main>
+        
+        <div class="slideshow-container" id="slideshow-container">
+            <span class="close-slideshow">&times;</span>
+            <div class="slideshow-content">
+                <img id="slideshow-image" src="" alt="Slideshow image">
+                <div class="slideshow-nav">
+                    <button id="prev-slide">&lt;</button>
+                    <button id="next-slide">&gt;</button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>&copy; 2025 Telychko Mykola. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Gallery data with three content types
+        const galleryData = [
+            {
+                id: 1,
+                title: "Common Verbs",
+                description: "Essential verbs for daily conversation",
+                image: "https://fastly.picsum.photos/id/921/600/400.jpg?hmac=CgdYJULwF7W9l5ebMWo7unYBjHngpyhqzvsGYinS18I",
+                type: "vocabulary"
+            },
+            {
+                id: 2,
+                title: "Present Simple",
+                description: "Structure and usage of present simple tense",
+                image: "../img/img_1.jpg",
+                type: "grammar"
+            },
+            {
+                id: 3,
+                title: "Vowel Sounds",
+                description: "Practice English vowel pronunciation",
+                image: "../img/img_2.jpg",
+                type: "pronunciation"
+            },
+            {
+                id: 4,
+                title: "Business Terms",
+                description: "Vocabulary for professional settings",
+                image: "../img/img_3.png",
+                type: "vocabulary"
+            },
+            {
+                id: 5,
+                title: "Past Tenses",
+                description: "Comparison of past simple and past continuous",
+                image: "../img/img_4.jpg",
+                type: "grammar"
+            },
+            {
+                id: 6,
+                title: "Word Stress",
+                description: "Rules for stressing syllables in English words",
+                image: "../img/img_5.png",
+                type: "pronunciation"
+            },
+            {
+                id: 7,
+                title: "Travel Phrases",
+                description: "Useful expressions for travelers",
+                image: "../img/img_6.jpg",
+                type: "vocabulary"
+            },
+            {
+                id: 8,
+                title: "Conditionals",
+                description: "All types of conditional sentences",
+                image: "../img/img_7.jpg",
+                type: "grammar"
+            },
+            {
+                id: 9,
+                title: "Intonation",
+                description: "Rising and falling tones in questions",
+                image: "https://source.unsplash.com/random/600x400/?intonation",
+                type: "pronunciation"
+            }
+        ];
+
+        // DOM elements
+        const galleryContainer = document.getElementById('gallery-container');
+        const contentFilter = document.getElementById('content-filter');
+        const startSlideshowBtn = document.getElementById('start-slideshow');
+        const slideshowContainer = document.getElementById('slideshow-container');
+        const slideshowImage = document.getElementById('slideshow-image');
+        const prevSlideBtn = document.getElementById('prev-slide');
+        const nextSlideBtn = document.getElementById('next-slide');
+        const closeSlideshow = document.querySelector('.close-slideshow');
+
+        // Current slideshow state
+        let currentSlideshowItems = [];
+        let currentSlideIndex = 0;
+
+        // Initialize gallery
+        function initGallery() {
+            renderGalleryItems(galleryData);
+            
+            // Event listeners
+            contentFilter.addEventListener('change', filterGallery);
+            startSlideshowBtn.addEventListener('click', startSlideshow);
+            closeSlideshow.addEventListener('click', closeSlideshowHandler);
+            prevSlideBtn.addEventListener('click', showPrevSlide);
+            nextSlideBtn.addEventListener('click', showNextSlide);
+            
+            // Close slideshow when clicking outside image
+            slideshowContainer.addEventListener('click', (e) => {
+                if (e.target === slideshowContainer) {
+                    closeSlideshowHandler();
+                }
+            });
+        }
+
+        // Render gallery items
+        function renderGalleryItems(items) {
+            galleryContainer.innerHTML = '';
+            
+            if (items.length === 0) {
+                galleryContainer.innerHTML = '<p>No items found for this filter.</p>';
+                return;
+            }
+            
+            items.forEach(item => {
+                const galleryItem = document.createElement('div');
+                galleryItem.className = 'gallery-item';
+                galleryItem.dataset.type = item.type;
+                
+                galleryItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.title}">
+                    <div class="gallery-item-info">
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                    </div>
+                `;
+                
+                galleryContainer.appendChild(galleryItem);
+            });
+        }
+
+        // Filter gallery by content type
+        function filterGallery() {
+            const selectedType = contentFilter.value;
+            
+            if (selectedType === 'all') {
+                renderGalleryItems(galleryData);
+            } else {
+                const filteredItems = galleryData.filter(item => item.type === selectedType);
+                renderGalleryItems(filteredItems);
+            }
+        }
+
+        // Start slideshow with filtered content
+        function startSlideshow() {
+            const selectedType = contentFilter.value;
+            
+            if (selectedType === 'all') {
+                currentSlideshowItems = [...galleryData];
+            } else {
+                currentSlideshowItems = galleryData.filter(item => item.type === selectedType);
+            }
+            
+            if (currentSlideshowItems.length === 0) {
+                alert('No items to show in slideshow for this filter.');
+                return;
+            }
+            
+            currentSlideIndex = 0;
+            showSlide(currentSlideIndex);
+            slideshowContainer.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Show specific slide
+        function showSlide(index) {
+            if (currentSlideshowItems.length === 0) return;
+            
+            // Handle wrap-around for index
+            if (index >= currentSlideshowItems.length) {
+                currentSlideIndex = 0;
+            } else if (index < 0) {
+                currentSlideIndex = currentSlideshowItems.length - 1;
+            } else {
+                currentSlideIndex = index;
+            }
+            
+            const currentItem = currentSlideshowItems[currentSlideIndex];
+            slideshowImage.src = currentItem.image;
+            slideshowImage.alt = currentItem.title;
+        }
+
+        // Show previous slide
+        function showPrevSlide() {
+            showSlide(currentSlideIndex - 1);
+        }
+
+        // Show next slide
+        function showNextSlide() {
+            showSlide(currentSlideIndex + 1);
+        }
+
+        // Close slideshow
+        function closeSlideshowHandler() {
+            slideshowContainer.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Keyboard navigation for slideshow
+        document.addEventListener('keydown', (e) => {
+            if (slideshowContainer.style.display === 'flex') {
+                if (e.key === 'ArrowLeft') {
+                    showPrevSlide();
+                } else if (e.key === 'ArrowRight') {
+                    showNextSlide();
+                } else if (e.key === 'Escape') {
+                    closeSlideshowHandler();
+                }
+            }
+        });
+
+        // Initialize the gallery when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initGallery);
+    </script>
+</body>
+</html>
