@@ -1,5 +1,5 @@
 
-
+- must be acceces pdf translation to 3-ussp.pdf (link)
 
 - loginc js change on only css logic - rozdil2.html
 
