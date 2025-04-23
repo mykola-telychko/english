@@ -18,20 +18,25 @@ Top Ten Most Influential U.S. Presidential Speeches
 (-- DONE ) Franklin D. Roosevelt's "First Inaugural Address" (1933)
 Amidst the Great Depression, FDR restored hope with his declaration that "the only thing we have to fear is fear itself," setting the tone for his presidency and the New Deal programs.
 
-John F. Kennedy's "Inaugural Address" (1961)
-Kennedy inspired a generation with his call to public service: "Ask not what your country can do for you—ask what you can do for your country," launching the idealism of the 1960s.
+(-- DONE ) John F. Kennedy's "Inaugural Address" (1961)
 
 Martin Luther King Jr.'s "I Have a Dream" (1963)
 While not a president, King's speech at the Lincoln Memorial during the March on Washington became foundational to American civil rights rhetoric and influenced presidential discourse ever after.
+
 Ronald Reagan's "Remarks at the Brandenburg Gate" (1987)
 Reagan's direct challenge to Soviet leadership—"Mr. Gorbachev, tear down this wall!"—became an iconic moment in Cold War history and symbolized the coming end of the Soviet Union.
+
 Franklin D. Roosevelt's "Pearl Harbor Address" (1941)
 The "Day of Infamy" speech following the Japanese attack on Pearl Harbor galvanized American resolve and led to the U.S. entry into World War II.
+
 George W. Bush's "Bullhorn Address" (2001)
 While standing on rubble at Ground Zero after the 9/11 attacks, Bush's improvised remarks through a bullhorn ("I can hear you! The rest of the world hears you!") captured the national mood in a moment of crisis.
+
 Theodore Roosevelt's "The Man with the Muck-Rake" (1906)
 This speech coined a term for investigative journalists and helped define the Progressive Era's approach to corruption and reform.
+
 Lyndon B. Johnson's "We Shall Overcome" (1965)
 Johnson's speech to Congress urging passage of the Voting Rights Act adopted the anthem of the civil rights movement and represented a pivotal moment in civil rights legislation.
+
 Barack Obama's "A More Perfect Union" (2008)
 Obama's speech on race relations during his first presidential campaign addressed racial tensions in America with unusual candor and complexity for a political speech.
