@@ -20,8 +20,7 @@ Amidst the Great Depression, FDR restored hope with his declaration that "the on
 
 (-- DONE ) John F. Kennedy's "Inaugural Address" (1961)
 
-Martin Luther King Jr.'s "I Have a Dream" (1963)
-While not a president, King's speech at the Lincoln Memorial during the March on Washington became foundational to American civil rights rhetoric and influenced presidential discourse ever after.
+(-- DONE ) Martin Luther King Jr.'s "I Have a Dream" (1963)
 
 Ronald Reagan's "Remarks at the Brandenburg Gate" (1987)
 Reagan's direct challenge to Soviet leadership—"Mr. Gorbachev, tear down this wall!"—became an iconic moment in Cold War history and symbolized the coming end of the Soviet Union.
