@@ -1,3 +1,6 @@
+- upgrade dbs-d2.html / add new phrases 
+
+- add gramatics and text specific down below dialogues (and random quiz)
 
 - must be acceces pdf translation to 3-ussp.pdf (link)
 
