@@ -1,6 +1,8 @@
 Зробити розділ в проекті інгліш де будуть фрази для Ігор подивитись список таких словників для Кс і доти.
  Вивчити що там англійською люди говорять командують в цих іграх/ подивитись мою роботу в цьому напрямі на Гугл доку та інгліш тг канал мій
 
+- math articles (+best high schools) math-science.html
+
 - upgrade dbs-d2.html / add new phrases 
 
 - add gramatics and text specific down below dialogues (and random quiz)
@@ -8,8 +10,6 @@
 - must be acceces pdf translation to 3-ussp.pdf (link)
 
 - logic js change on only css logic - rozdil2.html
-
-– проблема математики та її вивчення. стан математичної науки у європі і сша. чи переходить азіатська кількість в якість. яка азійська програма вивчення математики є найефективнішою
 
 - to daily english <a href="page/d4.html">weekend planning</a> /
 
