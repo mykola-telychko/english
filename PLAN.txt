@@ -1,7 +1,9 @@
 Зробити розділ в проекті інгліш де будуть фрази для Ігор подивитись список таких словників для Кс і доти.
  Вивчити що там англійською люди говорять командують в цих іграх/ подивитись мою роботу в цьому напрямі на Гугл доку та інгліш тг канал мій
 
-- math articles (+best high schools) math-science.html
+-  math-science.html
+
+- best high schools (estimate methods) old traditional schools
 
 - upgrade dbs-d2.html / add new phrases 
 
