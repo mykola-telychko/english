@@ -65,6 +65,11 @@ section ul li {
     margin-bottom: 10px;
 }
 
+/* Increase text size in all list items by 28% */
+li {
+    font-size: 128%;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -92,4 +97,9 @@ footer {
 
 footer p {
     margin: 0;
+}
+
+/* Ensure navigation list items are not enlarged by the global li rule */
+nav ul li {
+    font-size: 1rem;
 }
