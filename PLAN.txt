@@ -22,3 +22,5 @@
 - change footer in ulink.html
 
 - add wiki article to hes/BEmpire - https://en.wikipedia.org/wiki/British_Empire
+
+done: d8, d2, d9?, 
