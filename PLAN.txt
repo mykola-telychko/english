@@ -24,3 +24,7 @@
 - add wiki article to hes/BEmpire - https://en.wikipedia.org/wiki/British_Empire
 
 done: d8, d2, d9?, d11, матан
+
+-- add math2.html to list 
+
+-- unification ulinks and other pages
