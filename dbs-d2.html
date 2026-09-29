@@ -232,6 +232,77 @@
     <p>
         <strong>Alice:</strong> Only if you bring emergency chocolate! winks Later, nerd!
     </p>
+    <!-- Insert before </article> -->
+
+<p><strong>Tom:</strong> Hey, Alice, how did the ramen place turn out? I meant to ask you yesterday, but I got buried in that database project and completely lost track of time.</p>
+
+<p><strong>Alice:</strong> It was great, actually. You missed a lot of noodles, but I’ll let it go. How’s the project going? Last time you said you were trying to decide between MySQL and MongoDB.</p>
+
+<p><strong>Tom:</strong> I’m still thinking it through. To be honest, I started with MongoDB because the flexible structure sounded convenient, but the more I work on the project, the more I think MySQL might be a better fit. The data has clear relationships, and I need to connect users, orders, and products.</p>
+
+<p><strong>Alice:</strong> That makes sense. If the data has clear relationships, a relational database could keep things easier to organize. Have you tried sketching out the tables before choosing the database? Sometimes it’s easier to see what you need once you’ve drawn the structure.</p>
+
+<p><strong>Tom:</strong> I have, and it helped. I made a simple diagram with users, orders, and products, and I realized that one order can contain several products. The thing is, I wasn’t sure how to represent that without repeating the same information over and over.</p>
+
+<p><strong>Alice:</strong> You could use a separate table for the items in each order. That way, the order and the products are connected through the order items, rather than storing a whole list of product details in one place. It might feel like extra work at first, but it usually makes updates more predictable.</p>
+
+<p><strong>Tom:</strong> Right, that’s what I ended up doing. I added an `order_items` table with the order ID, the product ID, and the quantity. It looks a bit more complicated than my first idea, but I can see why it’s useful. If a product name changes, I only have to update it once.</p>
+
+<p><strong>Alice:</strong> Exactly. And if you want to show the full order later, you can use a query to join the tables. Have you tried writing that query yet, or are you still working on the schema?</p>
+
+<p><strong>Tom:</strong> I’ve tried a couple of queries, but I keep getting more rows than I expect. I think I may be joining the tables incorrectly. The query runs, so at first glance it looks fine, but the same order appears several times.</p>
+
+<p><strong>Alice:</strong> That can happen when one order has several items. The query may be returning one row for each item in the order, which isn’t necessarily wrong. What are you trying to show: one row per order, or one row per product in each order?</p>
+
+<p><strong>Tom:</strong> Oh, I hadn’t thought of it that way. For the order summary, I want one row per order, but for the detailed view, I need to see every product. So the same query probably shouldn’t be responsible for both screens.</p>
+
+<p><strong>Alice:</strong> That sounds right. You can keep the summary query separate from the detailed one. The main thing is to be clear about what each query is meant to return. If you know what one row represents, it’s much easier to spot when the result doesn’t look right.</p>
+
+<p><strong>Tom:</strong> That’s a good point. I’ve mostly been checking whether the query runs, instead of checking whether the results make sense. I’ll add a few sample orders with different numbers of products and test both views. That should make it easier to catch mistakes.</p>
+
+<p><strong>Alice:</strong> Definitely. And while you’re at it, try a case where an order has no items yet, if your app allows that. It’s easy to test the normal case and forget about the situations that are a little less common.</p>
+
+<p><strong>Tom:</strong> Fair enough. I’ll test an empty order, an order with one item, and one with several items. I should probably test what happens if someone tries to add a product that doesn’t exist, too. I don’t want the database to accept something that leaves the data in a strange state.</p>
+
+<p><strong>Alice:</strong> Exactly. That’s where constraints can help. For example, a foreign key can make sure an order item refers to a real order and a real product. You still need to handle errors in the app, of course, but the database can provide another layer of protection.</p>
+
+<p><strong>Tom:</strong> I see what you mean. I was planning to check everything in JavaScript, but it makes sense not to rely on the front end alone. Someone could send a request directly, or the app could have a bug, and then the database would still need to protect its own data.</p>
+
+<p><strong>Alice:</strong> Right. You don’t have to add a complicated system for a small project, but it’s good to decide where each kind of validation belongs. The form can catch obvious mistakes and give the user a helpful message; the database can enforce rules that must always be true.</p>
+
+<p><strong>Tom:</strong> By the way, I’ve also been wondering whether I should add indexes now. Some of the tables are getting bigger, and I’ve heard indexes can make queries faster. Is there any reason not to add them everywhere?</p>
+
+<p><strong>Alice:</strong> There is. Indexes can speed up some searches, but they also take up space and can make writes a little slower because the indexes need to be updated too. I’d start by checking which columns you often search or join on. For a small project, it’s usually better to add indexes for a clear reason than to add them everywhere just in case.</p>
+
+<p><strong>Tom:</strong> That makes sense. I can check the columns used in my common queries and add an index where it actually helps. I’ll also try running the query before and after, although I’m not sure I’ll notice a difference with such a small amount of data.</p>
+
+<p><strong>Alice:</strong> You might not notice much yet, and that’s okay. With only a few rows, almost any query can seem fast. The useful thing is to understand what the index is for and check how the database plans to run the query. Just don’t assume an index has improved things because it sounds like the right solution.</p>
+
+<p><strong>Tom:</strong> Got it. Test first, then decide. I think I’ve been jumping to solutions too quickly—first choosing MongoDB because it sounded flexible, and now wanting to add indexes because I’ve heard they’re useful. I should probably start with the problem I’m trying to solve.</p>
+
+<p><strong>Alice:</strong> Exactly. It depends on the project. MongoDB can be a good choice when your documents naturally have a flexible structure, and MySQL can be a good fit when your data has relationships and you need reliable transactions. Neither one is automatically better; it comes down to what the application needs to do.</p>
+
+<p><strong>Tom:</strong> And ClickHouse would be a different kind of choice, right? I was reading about it again last night, but I’m not sure it makes sense for this app.</p>
+
+<p><strong>Alice:</strong> Probably not for the main order workflow. ClickHouse is designed for analytical queries over large amounts of data, so it can be great for reports and dashboards. But if your app mostly creates and updates individual orders, a transactional database is likely a more natural fit.</p>
+
+<p><strong>Tom:</strong> So I could use MySQL for the app itself and look at ClickHouse later if I needed to analyze a large amount of historical data. That sounds more realistic than trying to use every database I’ve been curious about in one project.</p>
+
+<p><strong>Alice:</strong> Exactly. It’s tempting to add technology because it’s interesting, but every extra tool comes with more setup and more things to maintain. If MySQL does the job well, there’s no need to make the project more complicated just to make it sound impressive.</p>
+
+<p><strong>Tom:</strong> I’m glad we talked about it. I’ll finish the schema, write a few tests for the order queries, and then see whether there’s a real reason to add indexes. If I get stuck, would you mind taking a look at the query with me?</p>
+
+<p><strong>Alice:</strong> Of course. Send it over when you’re ready, and include a few example rows plus what you expected the result to look like. It’s much easier to help when I can see the query, the data, and the problem all together.</p>
+
+<p><strong>Tom:</strong> Will do. And if you want, I can take a look at your portfolio site afterwards. I remember you said you were trying to improve how the projects are organized.</p>
+
+<p><strong>Alice:</strong> That would be great. I’ve been working on the layout, but I’m not sure the project descriptions explain what I actually contributed. Maybe we can swap feedback: you check my portfolio, and I’ll help you test the database queries.</p>
+
+<p><strong>Tom:</strong> Sounds like a plan. Let’s meet after work on Thursday, grab something to eat, and spend an hour on each project. That way, we can get some work done without turning the whole evening into a meeting.</p>
+
+<p><strong>Alice:</strong> Deal. And if we start getting too deep into database theory, I’m ordering dessert to bring us back to reality.</p>
+
+<p><strong>Tom:</strong> Fair enough. I’ll bring the queries; you bring the dessert. And this time, I’ll actually show up for the noodles.</p>
 </article>
 
 
