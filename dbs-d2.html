@@ -303,6 +303,69 @@
 <p><strong>Alice:</strong> Deal. And if we start getting too deep into database theory, I’m ordering dessert to bring us back to reality.</p>
 
 <p><strong>Tom:</strong> Fair enough. I’ll bring the queries; you bring the dessert. And this time, I’ll actually show up for the noodles.</p>
+
+<!-- Insert before </article> -->
+
+<p><strong>Alice:</strong> So, how did the queries go after we talked? Did you manage to fix the extra rows?</p>
+
+<p><strong>Tom:</strong> More or less. I separated the order summary from the detailed view, and now each query returns what I expect. The thing is, I’d been trying to make one query do everything, which made it harder to understand and maintain.</p>
+
+<p><strong>Alice:</strong> That makes sense. It’s tempting to reuse one query everywhere, but different screens often need different results. Did you add those test cases too?</p>
+
+<p><strong>Tom:</strong> I did. I tested an empty order, an order with one item, and one with several items. I also checked what happens if the product ID doesn’t exist. The foreign key catches that, but I still need to show the user a helpful message instead of a technical error.</p>
+
+<p><strong>Alice:</strong> I see what you mean. The database can protect the data, but the app should explain the problem in a way people can understand. You could say, “That product is no longer available. Please choose another one.” It’s clearer than showing an error code.</p>
+
+<p><strong>Tom:</strong> Right. I’ll handle that in the app. I’m also thinking about what happens if the order is created successfully but saving one of its items fails. I don’t want to end up with an order that looks complete but has only half its products.</p>
+
+<p><strong>Alice:</strong> Good point. That sounds like a case for a transaction: either all the related changes succeed, or none of them do. The thing is, those problems can be hard to notice if you only test the happy path.</p>
+
+<p><strong>Tom:</strong> Exactly. I’ll try making one item invalid and check whether the order is rolled back. Just to be clear, I don’t need to use a transaction for every single database operation, right?</p>
+
+<p><strong>Alice:</strong> Right. Use one when several changes need to succeed or fail together. For example, creating an order and adding its items is a good case. But for a simple update that changes one value, a transaction may not add much.</p>
+
+<p><strong>Tom:</strong> That makes sense. I’ll keep it focused. By the way, I pushed the changes to Git last night, but I’m not sure my commit messages are very useful. I keep writing things like “fix stuff” and “update code.”</p>
+
+<p><strong>Alice:</strong> To be honest, we’ve all written commit messages like that. Try saying what changed and, when it helps, why. Something like “Add validation for empty order items” is much easier to understand later than “fix stuff.”</p>
+
+<p><strong>Tom:</strong> I see what you mean. A good message is a bit like a note to my future self. I’ll clean up the recent ones before I share the repository. I should probably add a README too, with the setup steps and a short explanation of the database structure.</p>
+
+<p><strong>Alice:</strong> Definitely. Just to be clear, someone should be able to clone the project, follow the instructions, and get it running without asking you where the database settings go. You don’t need to document every detail, but the first steps should be obvious.</p>
+
+<p><strong>Tom:</strong> That’s fair. I’ll add an example environment file, but I won’t put any real passwords in the repository. The thing is, I’ve seen people accidentally commit their database credentials, and I’d rather not learn that lesson the hard way.</p>
+
+<p><strong>Alice:</strong> Good call. Keep the real values in your local environment, and make sure the example file uses placeholders. It’s also worth checking your Git history before sharing, just in case a secret was committed earlier and then removed from the latest version.</p>
+
+<p><strong>Tom:</strong> I hadn’t thought about the history. I’ll check it. How’s your portfolio going, by the way? Did you get a chance to try the new layout on your phone?</p>
+
+<p><strong>Alice:</strong> I did, and it’s better than before, but the project cards still feel cramped on a small screen. I’m trying to decide whether to use one column on phones or keep two columns and make the cards narrower.</p>
+
+<p><strong>Tom:</strong> I’d try one column first. The thing is, two columns can look neat on a laptop but make the text hard to read on a phone. If you’re unsure, you could ask someone to find a specific project and watch how they use the page.</p>
+
+<p><strong>Alice:</strong> That makes sense. I’ll give them a simple task instead of asking whether they like the design. Just to be clear, I shouldn’t explain where the project links are before they try, should I?</p>
+
+<p><strong>Tom:</strong> Exactly. Let them try first, and see whether they can find the links on their own. If they get stuck, ask what they expected to happen. I see what you mean about wanting to help, but if you explain the page too early, you won’t find out whether the layout is clear.</p>
+
+<p><strong>Alice:</strong> Fair enough. I’ll try that with my sister this weekend. And if you want, I can look at your README once you’ve written the first draft. I’m happy to check whether the setup instructions make sense to someone who hasn’t seen the project before.</p>
+
+<p><strong>Tom:</strong> That would be great. I’ll send you the link when it’s ready. In return, I can test your site on a couple of browsers and check whether the navigation still works when the screen gets smaller.</p>
+
+<p><strong>Alice:</strong> Sounds like a plan. We can swap feedback without turning it into a huge review. Let’s each choose two or three things to check, and then we can talk about what we noticed over coffee.</p>
+
+<p><strong>Tom:</strong> Works for me. I’ll focus on the transaction, the error message, and the README. The thing is, there are still plenty of features I could add, but I think it’s better to make the main flow reliable first.</p>
+
+<p><strong>Alice:</strong> I agree. It’s easy to keep adding ideas, but a smaller project that works well is easier to explain and easier to maintain. Just to be clear, that doesn’t mean you can never add those features; it just means you don’t have to build everything at once.</p>
+
+<p><strong>Tom:</strong> Exactly. I’ll make a list of possible improvements and leave them for later. For now, I’ll finish what I’ve started, ask for feedback, and see what actually needs attention. I see what you mean about letting the project grow based on real problems instead of guesses.</p>
+
+<p><strong>Alice:</strong> That’s the idea. All right, send me the link when you’ve pushed the updates, and I’ll take a look. And please don’t name the next commit “fix stuff.”</p>
+
+<p><strong>Tom:</strong> No promises—but fine, I’ll try to write something useful. Thanks for the help, Alice. Coffee’s on me next time.</p>
+
+<p><strong>Alice:</strong> Deal. And if the database behaves, maybe we’ll even talk about something other than foreign keys for once.</p>
+
+<p><strong>Tom:</strong> I’ll believe that when I see it. See you Thursday!</p>
+
 </article>
 
 
