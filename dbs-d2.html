@@ -366,6 +366,94 @@
 
 <p><strong>Tom:</strong> I’ll believe that when I see it. See you Thursday!</p>
 
+Додай цей фрагмент перед `</article>`. Він продовжує їхню зустріч і повторює розмовні фрази в природному технічному контексті.
+
+````html
+<!-- Insert before </article> -->
+
+<p><strong>Alice:</strong> Hey, I’m glad we could meet. I had a quick look at your README, and the setup steps are clear. The thing is, I wasn’t sure whether I should create the database before running the app or whether the app does that for me.</p>
+
+<p><strong>Tom:</strong> Good question. You need to create the database first, but I forgot to mention that in the instructions. I’ll add it. I’ve also written a small script that creates the tables, so you won’t have to set them up by hand.</p>
+
+<p><strong>Alice:</strong> That makes sense. Could you explain how the script works? I’ve used database setup scripts before, but I’m not sure whether this one also adds the sample data.</p>
+
+<p><strong>Tom:</strong> It creates the tables, but it doesn’t add sample data yet. I thought about putting a few example orders in the script, but I didn’t want the test data to appear in a real database by mistake. I could make a separate script just for development, though.</p>
+
+<p><strong>Alice:</strong> That sounds like a good idea. Just to be clear, the development script would only run when you choose to use it, right? That way, someone can start with an empty database or add sample data when they want to try the app.</p>
+
+<p><strong>Tom:</strong> Exactly. I’ll keep it separate and explain what it does in the README. By the way, did you get a chance to test the order form?</p>
+
+<p><strong>Alice:</strong> I did. The main flow works, and I was able to create an order with several products. The thing is, when I refresh the page, the order still appears, but the confirmation message comes back too. It looks as if the app is showing the same message again even though the order was already saved.</p>
+
+<p><strong>Tom:</strong> That’s useful to know. I think the page is sending the form data again when it reloads. I’ll check how I handle the redirect after saving the order. Did you see it happen every time, or only when you refreshed straight away?</p>
+
+<p><strong>Alice:</strong> Every time I refreshed the confirmation page. I didn’t check whether it created a duplicate order, though. I only noticed that the message appeared again, so it might be worth checking the database too.</p>
+
+<p><strong>Tom:</strong> You’re right. I’ll check the orders table and see whether the refresh is sending another request. I could also change the flow so that, after the order is saved, the app redirects to a separate page. That should stop the browser from resending the form when someone refreshes.</p>
+
+<p><strong>Alice:</strong> I see what you mean. It’s better to check what’s happening in the database instead of guessing from the message alone. If there are duplicate orders, then we know it’s more than a display issue. If not, the problem is probably just the confirmation page.</p>
+
+<p><strong>Tom:</strong> Exactly. I’ll reproduce it, check the database, and then fix the right part. The thing is, I sometimes jump straight into changing the code before I’ve worked out what’s actually going wrong.</p>
+
+<p><strong>Alice:</strong> That happens to me too. I try to write down what I expected, what actually happened, and the steps that caused it. It sounds simple, but it helps me explain the bug and makes it easier for someone else to reproduce it.</p>
+
+<p><strong>Tom:</strong> That makes sense. I’ll add those steps to the issue instead of just writing “the confirmation page is broken.” Something like, “Create an order, wait for the confirmation page, refresh, and check whether the order is added again.” Then I can note what I find in the database.</p>
+
+<p><strong>Alice:</strong> That’s much clearer. And if it turns out to be a small fix, add a test so the same problem doesn’t come back later. Just to be clear, the test should check that refreshing the page doesn’t create another order, right?</p>
+
+<p><strong>Tom:</strong> Right. I’ll test the full flow if I can, although I may need to separate the part that saves the order from the part that displays the confirmation. That could make the code easier to test too.</p>
+
+<p><strong>Alice:</strong> It could. But I wouldn’t split it up just to make the test pass. The thing is, the code should still make sense when you come back to it next month. If a small change makes the flow clearer, great; if it adds extra layers without helping, keep it simple.</p>
+
+<p><strong>Tom:</strong> Fair point. I’ll see what the current code looks like before I decide. While we’re talking about the database, I also wondered whether I should store the total price in the order table or calculate it every time I open the order.</p>
+
+<p><strong>Alice:</strong> It depends on what you need to do. If you calculate the total every time, you always get it from the current prices, but that could be a problem if a product’s price changes later. For an order, it’s usually important to keep the price the customer actually paid.</p>
+
+<p><strong>Tom:</strong> So I should save the product price in the order item when the order is created, instead of always looking up the current product price. That way, the old order doesn’t change if I update the price next week.</p>
+
+<p><strong>Alice:</strong> Exactly. That makes sense for an order history. You can still keep the current price in the products table, but the order item should record the price at the time of purchase. It’s one of those details that’s easy to miss until the data starts changing.</p>
+
+<p><strong>Tom:</strong> I see what you mean. I’ll add a `unit_price` column to `order_items` and update the code that creates an order. I’ll also add a test where the product price changes after the order has been saved.</p>
+
+<p><strong>Alice:</strong> Nice. Just make sure you decide how to handle currency and rounding too. You don’t want totals to be slightly different in the database and on the page because one part of the app rounds differently.</p>
+
+<p><strong>Tom:</strong> Good point. I’ll check how I’m storing the prices now. I used a floating-point number at first, but I’ve read that it can cause rounding problems with money. I might change it to a decimal type.</p>
+
+<p><strong>Alice:</strong> That’s worth looking into. The main thing is to use a type that matches the data you’re storing. You don’t have to solve every possible payment problem for this practice project, but it’s good to understand why the choice matters.</p>
+
+<p><strong>Tom:</strong> By the way, I pushed the latest changes to Git this morning. Could you take a look at the new table and tell me if the column names make sense?</p>
+
+<p><strong>Alice:</strong> Sure. I like `unit_price`, and `quantity` is clear too. One thing I’d check is whether the database should allow a quantity of zero. If an order item has to contain at least one product, you could add a rule to prevent zero or negative values.</p>
+
+<p><strong>Tom:</strong> That makes sense. I already check that in the form, but I’ll add a database constraint as well. I don’t want the data to become invalid just because someone bypasses the form or another part of the app forgets to check it.</p>
+
+<p><strong>Alice:</strong> Right. It’s good to validate in the app so the user gets a helpful message, and it’s good to enforce important rules in the database too. They have different jobs, but they can support each other.</p>
+
+<p><strong>Tom:</strong> I’ve made the changes and added the tests. Could you try the order form again, especially the refresh problem? I want to make sure I fixed the cause and not just the message.</p>
+
+<p><strong>Alice:</strong> I just tried it. The confirmation page still appears, but refreshing it doesn’t create a second order anymore. The total also stays the same after I changed the product price. That’s a nice improvement.</p>
+
+<p><strong>Tom:</strong> Great! Thanks for checking. The thing is, I probably wouldn’t have caught the price issue if you hadn’t asked about order history. I’ll add it to the README as one of the design decisions, so people can see why the order item stores its own price.</p>
+
+<p><strong>Alice:</strong> That makes sense. A short note is enough; you don’t need to explain the whole database theory. Just say what you chose and why. If someone wants more detail, they can ask you or look at the schema.</p>
+
+<p><strong>Tom:</strong> I’ll do that. I’m also thinking about putting the project online, but I haven’t deployed a database-backed app before. Is there anything I should check before I try?</p>
+
+<p><strong>Alice:</strong> First, check where the database will run and how the app will connect to it. Make sure your credentials come from environment variables, not from the code, and don’t use your local development database for the live app. You should also think about backups before there’s important data to lose.</p>
+
+<p><strong>Tom:</strong> I see what you mean. I’ve only been using sample data so far, but I should still set it up safely from the beginning. I’ll read the hosting instructions and check whether the service provides automatic backups. If not, I’ll find out what a simple backup plan would look like.</p>
+
+<p><strong>Alice:</strong> Good idea. And don’t worry about adding a complicated deployment system before the app is ready. Get the basics working, test that the app can connect to the database, and make sure you know how to recover if something goes wrong.</p>
+
+<p><strong>Tom:</strong> That sounds manageable. I’ll finish the README, check the database rules, and then try a test deployment with sample data. If I get stuck, I’ll write down the error and what I’ve already tried instead of just saying, “It doesn’t work.”</p>
+
+<p><strong>Alice:</strong> Perfect. That makes it much easier for someone to help you. And if the first deployment fails, it doesn’t mean the project is broken; it just gives you another problem to investigate. Send me the link when it’s ready, and I’ll try it from my phone too.</p>
+
+<p><strong>Tom:</strong> Thanks, Alice. I’ll keep you posted. And after all that database talk, I think we’ve earned coffee—and maybe noodles if the place is still open.</p>
+
+<p><strong>Alice:</strong> Sounds good. But this time, let’s leave the laptops in our bags for at least the first ten minutes.</p>
+
+
 </article>
 
 
