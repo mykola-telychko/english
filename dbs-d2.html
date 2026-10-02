@@ -453,6 +453,207 @@
 
 <p><strong>Alice:</strong> Sounds good. But this time, let’s leave the laptops in our bags for at least the first ten minutes.</p>
 
+Ось продовження для вставлення перед `</article>`. Розмовні фрази на кшталт **“The thing is…”**, **“That makes sense”**, **“I see what you mean”** і **“Just to be clear…”** повторюються в різних ситуаціях.
+
+````html
+<!-- Insert before </article> -->
+
+<p><strong>Tom:</strong> Okay, I’ve put my laptop away. So, how was your week? Did you get a chance to test the portfolio on your phone?</p>
+
+<p><strong>Alice:</strong> I did, and I found a couple of things I hadn’t noticed on my laptop. The menu was covering one of the project links, and the text looked too small on the first card. The thing is, I knew the page needed testing on a phone, but I didn’t expect to find those problems so quickly.</p>
+
+<p><strong>Tom:</strong> That makes sense. It’s easy to miss layout problems when you’re looking at the same page on one screen all the time. Did you fix them already, or are you still deciding what to change?</p>
+
+<p><strong>Alice:</strong> I fixed the menu, but I’m still testing the card layout. I changed the grid to one column on smaller screens, and it’s easier to read now. Just to be clear, I haven’t checked every phone size yet, but the main ones I tried look fine.</p>
+
+<p><strong>Tom:</strong> That sounds like a good start. I did something similar with my app yesterday. I deployed a test version, and the database connection worked, but the page showed an error when I tried to create an order.</p>
+
+<p><strong>Alice:</strong> Oh, no. Did you figure out what was going on?</p>
+
+<p><strong>Tom:</strong> Eventually. The thing is, I’d set the database credentials on my computer, but I hadn’t added them to the hosting service. The app was running, but it didn’t know how to connect to the database. Once I added the environment variables, the order form worked.</p>
+
+<p><strong>Alice:</strong> I see what you mean. It’s easy to forget that the deployed app has its own settings. Did you use the same database you use locally?</p>
+
+<p><strong>Tom:</strong> No, I set up a separate test database. I didn’t want to risk mixing sample data with anything real, even though the project is still just for practice. I also checked that the connection details weren’t in the code before I pushed it.</p>
+
+<p><strong>Alice:</strong> Good call. Just to be clear, you didn’t put the actual credentials in the example environment file either, right?</p>
+
+<p><strong>Tom:</strong> Right. The file only has placeholder values, and the real settings are saved in the hosting dashboard. I also added a note to the README explaining which variables need to be set. It took a little while, but now I think someone else could follow the steps without asking me what to do.</p>
+
+<p><strong>Alice:</strong> That makes sense. Clear setup instructions save everyone time, including you when you come back to the project later. Did you run into anything else during deployment?</p>
+
+<p><strong>Tom:</strong> Yeah, one more thing. The tables weren’t there when the app first connected, so the page showed another error. I had to run the database setup script on the new database. I’m thinking I should make that step easier to find in the README.</p>
+
+<p><strong>Alice:</strong> Definitely. You could add a short section called “Database setup” and list the steps in order. The thing is, people often follow instructions from the top, so it helps if the order matches what they need to do.</p>
+
+<p><strong>Tom:</strong> I’ll do that. First create the database, then set the environment variables, and then run the setup script. Just to be clear, should I also explain how to add the sample data, or is that too much detail?</p>
+
+<p><strong>Alice:</strong> I’d include it if the sample data makes it easier to try the app. You can keep it optional and say, “Run this script if you want a few example orders.” That way, someone can start with an empty database or load the sample data, depending on what they want to test.</p>
+
+<p><strong>Tom:</strong> That makes sense. I’ll keep the development data separate from the setup script. I don’t want the app to create example orders automatically when someone is trying to start with a clean database.</p>
+
+<p><strong>Alice:</strong> Right. And speaking of setup, have you thought about what will happen when you need to change the tables later? If you add a new column, you’ll need a reliable way to update the database without rebuilding it from scratch.</p>
+
+<p><strong>Tom:</strong> I’ve read a little about database migrations, but I haven’t used them yet. The thing is, right now I can just delete the test database and run the setup script again. But that obviously won’t be a good option if there’s data I need to keep.</p>
+
+<p><strong>Alice:</strong> Exactly. A migration records a change to the database structure, so you can apply the same change in different environments. You don’t need to build a complicated system yourself, but it’s worth learning how your framework handles migrations before the project gets bigger.</p>
+
+<p><strong>Tom:</strong> I see what you mean. I’ll look at the tools the project already uses instead of writing my own scripts for every change. I’ll also make a backup before I try the first migration, just in case I make a mistake.</p>
+
+<p><strong>Alice:</strong> That’s sensible. Just to be clear, a migration helps you change the structure, but it doesn’t replace a backup. They solve different problems. A backup gives you a copy of the data; a migration gives you a repeatable way to update the schema.</p>
+
+<p><strong>Tom:</strong> Got it. I was treating them as if they were the same thing. I’ll read the documentation and try the migration on the test database first. If it works there, I’ll update the README with the command and what the migration changes.</p>
+
+<p><strong>Alice:</strong> Sounds good. And when you test it, try a database that already has sample orders in it. That way, you can check that the migration doesn’t just work on an empty database.</p>
+
+<p><strong>Tom:</strong> That’s a good point. I’ll check both: a fresh setup and an existing database with some data. The thing is, I usually test the easiest case first and then forget to check what happens when there’s already information saved.</p>
+
+<p><strong>Alice:</strong> It happens. A useful question to ask is, “What would someone already have in their account when this change is released?” That can help you think beyond the clean test database.</p>
+
+<p><strong>Tom:</strong> I like that question. By the way, I also noticed that the deployed app is a little slower than it was on my laptop. It’s not terrible, but the order page takes a couple of seconds to load. I’m not sure whether that’s normal or whether I should investigate it now.</p>
+
+<p><strong>Alice:</strong> I’d check it, but I wouldn’t start changing things without looking at what’s slow. Is the delay happening when the page loads, when the database query runs, or when the app sends the response?</p>
+
+<p><strong>Tom:</strong> I haven’t checked yet. I was about to add an index to the orders table, but then I remembered what we talked about and decided to find out where the delay is first.</p>
+
+<p><strong>Alice:</strong> That makes sense. An index might help a query, but it won’t fix a slow image or a problem in the app itself. Check the browser’s network panel and the server logs, then look at the query if that seems to be the slow part.</p>
+
+<p><strong>Tom:</strong> I’ll do that. I can compare the page locally and on the test site, and then check how long the database request takes. The thing is, I don’t want to spend hours optimizing something that’s only slow because the free hosting plan takes a moment to wake up.</p>
+
+<p><strong>Alice:</strong> Fair enough. That’s another reason to measure first. If the delay happens only on the first request, it may be the hosting service starting the app. If it happens every time, then you can investigate the page or the query more closely.</p>
+
+<p><strong>Tom:</strong> I checked the logs this morning. The first request is slow, but the next few are much faster. So it looks like the app needs a moment to start. I’ll mention that in my notes instead of trying to rewrite the database code.</p>
+
+<p><strong>Alice:</strong> Good call. It’s useful to know the difference between a real performance problem and a limitation of the test environment. How are the rest of your tests looking?</p>
+
+<p><strong>Tom:</strong> The database tests are passing locally, but I haven’t added them to the deployment process yet. I’d like them to run automatically whenever I push a change, but I’m still figuring out how to set that up.</p>
+
+<p><strong>Alice:</strong> That could be a good next step. You can start with the basics: install the project, run the tests, and stop the process if a test fails. You don’t need to automate everything at once. The main thing is to make sure a broken change is caught before it gets deployed.</p>
+
+<p><strong>Tom:</strong> That makes sense. I’ll add the test command first and check that it works with the test database. Just to be clear, I shouldn’t run the automated tests against the live database, even if I’m careful?</p>
+
+<p><strong>Alice:</strong> Right, don’t use the live database for tests that create, change, or delete data. Use a separate test database with sample data you can reset. That way, you can run the tests as often as you like without worrying about changing someone’s real orders.</p>
+
+<p><strong>Tom:</strong> I see what you mean. I’ll make sure the test settings point to the test database and add a check so the app won’t run those tests if the live database is selected. It’s probably better to be a little cautious there.</p>
+
+<p><strong>Alice:</strong> Definitely. And once the tests run automatically, the project will be easier to update. You’ll still need to review the changes, of course, but you’ll know sooner if something basic has stopped working.</p>
+
+<p><strong>Tom:</strong> I think I’ve got a good list for next week now: update the README, try a migration, check the slow first request, and get the tests running when I push changes. I’ll keep the list short so I can actually finish it.</p>
+
+<p><strong>Alice:</strong> That sounds realistic. The thing is, it’s easy to come away from a conversation with ten new ideas and try to do all of them at once. Pick the most useful ones, finish them, and then decide what needs attention next.</p>
+
+<p><strong>Tom:</strong> Exactly. I’ll start with the README and the migration because those will make the project easier to set up and maintain. Then I’ll look at the deployment checks. If I get stuck, I’ll write down what I tried and what happened before asking for help.</p>
+
+<p><strong>Alice:</strong> Perfect. And if you find a confusing error, send me the message and the steps that caused it. It’s much easier to help when we can reproduce the problem instead of guessing.</p>
+
+<p><strong>Tom:</strong> Will do. Thanks for listening, by the way. I came here planning to talk about my portfolio, and somehow we ended up discussing migrations, test databases, and server logs.</p>
+
+<p><strong>Alice:</strong> That’s what happens when you invite two developers for coffee. At least we managed to keep the laptops away for ten minutes.</p>
+
+<p><strong>Tom:</strong> Fair enough. Next time, let’s pick a place with terrible Wi-Fi so we have no choice but to talk about something else.</p>
+
+<p><strong>Alice:</strong> Deal. But if the app goes down before then, you’re still allowed to text me.</p>
+
+<!-- ...existing code... -->
+`````<!-- filepath: /Users/avanti/Documents/projects/GitHub/english/dbs-d2.html -->
+<!-- Insert before </article> -->
+
+<p><strong>Tom:</strong> Okay, I’ve put my laptop away. So, how was your week? Did you get a chance to test the portfolio on your phone?</p>
+
+<p><strong>Alice:</strong> I did, and I found a couple of things I hadn’t noticed on my laptop. The menu was covering one of the project links, and the text looked too small on the first card. The thing is, I knew the page needed testing on a phone, but I didn’t expect to find those problems so quickly.</p>
+
+<p><strong>Tom:</strong> That makes sense. It’s easy to miss layout problems when you’re looking at the same page on one screen all the time. Did you fix them already, or are you still deciding what to change?</p>
+
+<p><strong>Alice:</strong> I fixed the menu, but I’m still testing the card layout. I changed the grid to one column on smaller screens, and it’s easier to read now. Just to be clear, I haven’t checked every phone size yet, but the main ones I tried look fine.</p>
+
+<p><strong>Tom:</strong> That sounds like a good start. I did something similar with my app yesterday. I deployed a test version, and the database connection worked, but the page showed an error when I tried to create an order.</p>
+
+<p><strong>Alice:</strong> Oh, no. Did you figure out what was going on?</p>
+
+<p><strong>Tom:</strong> Eventually. The thing is, I’d set the database credentials on my computer, but I hadn’t added them to the hosting service. The app was running, but it didn’t know how to connect to the database. Once I added the environment variables, the order form worked.</p>
+
+<p><strong>Alice:</strong> I see what you mean. It’s easy to forget that the deployed app has its own settings. Did you use the same database you use locally?</p>
+
+<p><strong>Tom:</strong> No, I set up a separate test database. I didn’t want to risk mixing sample data with anything real, even though the project is still just for practice. I also checked that the connection details weren’t in the code before I pushed it.</p>
+
+<p><strong>Alice:</strong> Good call. Just to be clear, you didn’t put the actual credentials in the example environment file either, right?</p>
+
+<p><strong>Tom:</strong> Right. The file only has placeholder values, and the real settings are saved in the hosting dashboard. I also added a note to the README explaining which variables need to be set. It took a little while, but now I think someone else could follow the steps without asking me what to do.</p>
+
+<p><strong>Alice:</strong> That makes sense. Clear setup instructions save everyone time, including you when you come back to the project later. Did you run into anything else during deployment?</p>
+
+<p><strong>Tom:</strong> Yeah, one more thing. The tables weren’t there when the app first connected, so the page showed another error. I had to run the database setup script on the new database. I’m thinking I should make that step easier to find in the README.</p>
+
+<p><strong>Alice:</strong> Definitely. You could add a short section called “Database setup” and list the steps in order. The thing is, people often follow instructions from the top, so it helps if the order matches what they need to do.</p>
+
+<p><strong>Tom:</strong> I’ll do that. First create the database, then set the environment variables, and then run the setup script. Just to be clear, should I also explain how to add the sample data, or is that too much detail?</p>
+
+<p><strong>Alice:</strong> I’d include it if the sample data makes it easier to try the app. You can keep it optional and say, “Run this script if you want a few example orders.” That way, someone can start with an empty database or load the sample data, depending on what they want to test.</p>
+
+<p><strong>Tom:</strong> That makes sense. I’ll keep the development data separate from the setup script. I don’t want the app to create example orders automatically when someone is trying to start with a clean database.</p>
+
+<p><strong>Alice:</strong> Right. And speaking of setup, have you thought about what will happen when you need to change the tables later? If you add a new column, you’ll need a reliable way to update the database without rebuilding it from scratch.</p>
+
+<p><strong>Tom:</strong> I’ve read a little about database migrations, but I haven’t used them yet. The thing is, right now I can just delete the test database and run the setup script again. But that obviously won’t be a good option if there’s data I need to keep.</p>
+
+<p><strong>Alice:</strong> Exactly. A migration records a change to the database structure, so you can apply the same change in different environments. You don’t need to build a complicated system yourself, but it’s worth learning how your framework handles migrations before the project gets bigger.</p>
+
+<p><strong>Tom:</strong> I see what you mean. I’ll look at the tools the project already uses instead of writing my own scripts for every change. I’ll also make a backup before I try the first migration, just in case I make a mistake.</p>
+
+<p><strong>Alice:</strong> That’s sensible. Just to be clear, a migration helps you change the structure, but it doesn’t replace a backup. They solve different problems. A backup gives you a copy of the data; a migration gives you a repeatable way to update the schema.</p>
+
+<p><strong>Tom:</strong> Got it. I was treating them as if they were the same thing. I’ll read the documentation and try the migration on the test database first. If it works there, I’ll update the README with the command and what the migration changes.</p>
+
+<p><strong>Alice:</strong> Sounds good. And when you test it, try a database that already has sample orders in it. That way, you can check that the migration doesn’t just work on an empty database.</p>
+
+<p><strong>Tom:</strong> That’s a good point. I’ll check both: a fresh setup and an existing database with some data. The thing is, I usually test the easiest case first and then forget to check what happens when there’s already information saved.</p>
+
+<p><strong>Alice:</strong> It happens. A useful question to ask is, “What would someone already have in their account when this change is released?” That can help you think beyond the clean test database.</p>
+
+<p><strong>Tom:</strong> I like that question. By the way, I also noticed that the deployed app is a little slower than it was on my laptop. It’s not terrible, but the order page takes a couple of seconds to load. I’m not sure whether that’s normal or whether I should investigate it now.</p>
+
+<p><strong>Alice:</strong> I’d check it, but I wouldn’t start changing things without looking at what’s slow. Is the delay happening when the page loads, when the database query runs, or when the app sends the response?</p>
+
+<p><strong>Tom:</strong> I haven’t checked yet. I was about to add an index to the orders table, but then I remembered what we talked about and decided to find out where the delay is first.</p>
+
+<p><strong>Alice:</strong> That makes sense. An index might help a query, but it won’t fix a slow image or a problem in the app itself. Check the browser’s network panel and the server logs, then look at the query if that seems to be the slow part.</p>
+
+<p><strong>Tom:</strong> I’ll do that. I can compare the page locally and on the test site, and then check how long the database request takes. The thing is, I don’t want to spend hours optimizing something that’s only slow because the free hosting plan takes a moment to wake up.</p>
+
+<p><strong>Alice:</strong> Fair enough. That’s another reason to measure first. If the delay happens only on the first request, it may be the hosting service starting the app. If it happens every time, then you can investigate the page or the query more closely.</p>
+
+<p><strong>Tom:</strong> I checked the logs this morning. The first request is slow, but the next few are much faster. So it looks like the app needs a moment to start. I’ll mention that in my notes instead of trying to rewrite the database code.</p>
+
+<p><strong>Alice:</strong> Good call. It’s useful to know the difference between a real performance problem and a limitation of the test environment. How are the rest of your tests looking?</p>
+
+<p><strong>Tom:</strong> The database tests are passing locally, but I haven’t added them to the deployment process yet. I’d like them to run automatically whenever I push a change, but I’m still figuring out how to set that up.</p>
+
+<p><strong>Alice:</strong> That could be a good next step. You can start with the basics: install the project, run the tests, and stop the process if a test fails. You don’t need to automate everything at once. The main thing is to make sure a broken change is caught before it gets deployed.</p>
+
+<p><strong>Tom:</strong> That makes sense. I’ll add the test command first and check that it works with the test database. Just to be clear, I shouldn’t run the automated tests against the live database, even if I’m careful?</p>
+
+<p><strong>Alice:</strong> Right, don’t use the live database for tests that create, change, or delete data. Use a separate test database with sample data you can reset. That way, you can run the tests as often as you like without worrying about changing someone’s real orders.</p>
+
+<p><strong>Tom:</strong> I see what you mean. I’ll make sure the test settings point to the test database and add a check so the app won’t run those tests if the live database is selected. It’s probably better to be a little cautious there.</p>
+
+<p><strong>Alice:</strong> Definitely. And once the tests run automatically, the project will be easier to update. You’ll still need to review the changes, of course, but you’ll know sooner if something basic has stopped working.</p>
+
+<p><strong>Tom:</strong> I think I’ve got a good list for next week now: update the README, try a migration, check the slow first request, and get the tests running when I push changes. I’ll keep the list short so I can actually finish it.</p>
+
+<p><strong>Alice:</strong> That sounds realistic. The thing is, it’s easy to come away from a conversation with ten new ideas and try to do all of them at once. Pick the most useful ones, finish them, and then decide what needs attention next.</p>
+
+<p><strong>Tom:</strong> Exactly. I’ll start with the README and the migration because those will make the project easier to set up and maintain. Then I’ll look at the deployment checks. If I get stuck, I’ll write down what I tried and what happened before asking for help.</p>
+
+<p><strong>Alice:</strong> Perfect. And if you find a confusing error, send me the message and the steps that caused it. It’s much easier to help when we can reproduce the problem instead of guessing.</p>
+
+<p><strong>Tom:</strong> Will do. Thanks for listening, by the way. I came here planning to talk about my portfolio, and somehow we ended up discussing migrations, test databases, and server logs.</p>
+
+<p><strong>Alice:</strong> That’s what happens when you invite two developers for coffee. At least we managed to keep the laptops away for ten minutes.</p>
+
+<p><strong>Tom:</strong> Fair enough. Next time, let’s pick a place with terrible Wi-Fi so we have no choice but to talk about something else.</p>
+
+<p><strong>Alice:</strong> Deal. But if the app goes down before then, you’re still allowed to text me.</p>
+
 
 </article>
 
