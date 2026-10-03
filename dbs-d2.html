@@ -654,6 +654,215 @@
 
 <p><strong>Alice:</strong> Deal. But if the app goes down before then, you’re still allowed to text me.</p>
 
+Додай продовження перед `</article>`. У діалозі повторюються розмовні фрази **“The thing is…”**, **“That makes sense”**, **“I see what you mean”** і **“Just to be clear…”** у природному технічному контексті.
+
+````html
+<!-- Insert before </article> -->
+
+<p><strong>Tom:</strong> Hey, Alice, remember when you said I could text you if the app went down? It didn’t go down, exactly, but I got an error page this morning and couldn’t tell whether the database was offline or the app had failed to start.</p>
+
+<p><strong>Alice:</strong> That sounds frustrating. Did you check the server logs, or did you just see the error in the browser?</p>
+
+<p><strong>Tom:</strong> I checked the logs, and they showed that the app couldn’t connect to the database. The thing is, the database itself was running, but the connection timed out. I restarted the app and it worked again, but I’d like to understand what caused it before I call it fixed.</p>
+
+<p><strong>Alice:</strong> That makes sense. Restarting can get things working again, but it doesn’t always tell you what went wrong. Did the logs show how long the app waited before giving up?</p>
+
+<p><strong>Tom:</strong> They did. It waited for about thirty seconds, which seems like a long time for a page to load. I’m thinking about adding a clearer error message and a shorter timeout, but I don’t want to hide a real database problem from myself.</p>
+
+<p><strong>Alice:</strong> I see what you mean. A user-friendly message is important, but you still want enough detail in the logs to investigate the problem. You could show a simple message on the page, then record the technical details on the server.</p>
+
+<p><strong>Tom:</strong> Right, so the user sees something like, “We couldn’t load your orders. Please try again in a moment,” while I can check the logs for the actual error. Just to be clear, I shouldn’t show the database connection details on the page, should I?</p>
+
+<p><strong>Alice:</strong> Definitely not. Those details can reveal information you don’t want to share. Keep the message simple, and make sure the server log doesn’t include passwords or other secrets either.</p>
+
+<p><strong>Tom:</strong> Good point. I’ll check what the app is logging now. The thing is, I added a few debug messages while I was testing, and I’m not sure which ones are still useful and which ones are just noise.</p>
+
+<p><strong>Alice:</strong> That happens. Keep the messages that help you understand important events, like a failed database connection or an order that couldn’t be saved. You can remove messages that repeat the same information on every request. The main thing is to make the useful details easy to find when something goes wrong.</p>
+
+<p><strong>Tom:</strong> That makes sense. I’ll use different levels for normal information, warnings, and errors, so I don’t have to search through every small message. I also want to add a simple health check to see whether the app can reach the database.</p>
+
+<p><strong>Alice:</strong> That could help. Just to be clear, a health check should tell you whether the important parts of the app are available, but it shouldn’t return private information about the database. A basic “ready” or “not ready” response is usually enough.</p>
+
+<p><strong>Tom:</strong> Got it. I’ll make the response simple and keep the details in the logs. I’m also going to test what happens if the database is temporarily unavailable. Right now, I’ve only tested the app when everything is working.</p>
+
+<p><strong>Alice:</strong> That’s a good idea. The thing is, errors are part of the normal flow too, even if you hope users never see them. Try disconnecting the test database and check whether the app fails safely instead of hanging or showing a confusing page.</p>
+
+<p><strong>Tom:</strong> I see what you mean. I can use the test environment for that, so I won’t risk changing anything in the live database. I’ll check that the page responds quickly, shows a clear message, and doesn’t create a half-saved order.</p>
+
+<p><strong>Alice:</strong> Exactly. And after that, check that the app works again once the database is available. It’s easy to test the failure and forget to test recovery.</p>
+
+<p><strong>Tom:</strong> That’s fair. I’ll test both situations: when the database is unavailable and when the connection comes back. Just to be clear, I should also check the logs to make sure the failed request is recorded once, not over and over?</p>
+
+<p><strong>Alice:</strong> Yes, that’s worth checking. If one problem creates hundreds of repeated log messages, it can make the real issue harder to spot. The thing is, logging should help you understand what happened, not make it more difficult.</p>
+
+<p><strong>Tom:</strong> I’ll keep that in mind. I’ve also been thinking about backups. I have a backup command working locally, but I haven’t tried restoring from it yet. I guess a backup isn’t very useful if I don’t know whether it can be restored.</p>
+
+<p><strong>Alice:</strong> Exactly. Try restoring it to a separate test database and check that the orders and products are there. That makes sense as a first check, and it gives you more confidence than just seeing a file appear on your computer.</p>
+
+<p><strong>Tom:</strong> I see what you mean. I’ll make a backup, restore it somewhere safe, and compare a few records. I won’t test the restore on the live database, of course.</p>
+
+<p><strong>Alice:</strong> Good. And write down the steps once you’ve confirmed they work. Just to be clear, you don’t need a huge recovery manual for a practice app, but you should know where the backup is and how to use it.</p>
+
+<p><strong>Tom:</strong> That makes sense. I’ll add a short note to the README and include when the backup was created. I’ll also make sure the backup file isn’t accidentally pushed to Git if it contains real data.</p>
+
+<p><strong>Alice:</strong> Good call. Sample data is one thing, but real user data needs much more care. The thing is, it’s easy to focus on getting the app working and forget that data needs protection too.</p>
+
+<p><strong>Tom:</strong> You’re right. I’ll keep the project’s test data separate and check the `.gitignore` file. I’ll also remove any old local database files before I share the repository.</p>
+
+<p><strong>Alice:</strong> Sounds good. How are the automated tests going, by the way? Did you manage to get them running when you push a change?</p>
+
+<p><strong>Tom:</strong> I did, more or less. The tests run automatically now, and they catch the basic mistakes. The thing is, one test passes on my laptop but fails in the automated run, so I’m trying to work out what’s different between the two environments.</p>
+
+<p><strong>Alice:</strong> That can happen if the test depends on something that only exists on your computer, like a local setting or a piece of sample data. Does the failure message point to a particular test?</p>
+
+<p><strong>Tom:</strong> Yes, it says a product wasn’t found. I think I forgot to add that product to the test setup. Locally, it was already in my database from an earlier test, so everything looked fine.</p>
+
+<p><strong>Alice:</strong> I see what you mean. The test should create the data it needs instead of depending on what happens to be in your local database. That way, it should behave the same way each time and on another computer.</p>
+
+<p><strong>Tom:</strong> Right. I’ll update the test so it creates its own product and order before checking the result. Then I’ll run it a few times to make sure it doesn’t rely on leftover data.</p>
+
+<p><strong>Alice:</strong> That makes sense. A test that passes only because of old data can give you a false sense of confidence. Just to be clear, are you resetting the test database between runs?</p>
+
+<p><strong>Tom:</strong> I wasn’t, but I’ll add that. I can clear the test data before each run and then create exactly what the test needs. It should make the results more predictable.</p>
+
+<p><strong>Alice:</strong> Exactly. And if a test still fails, read the error message carefully before changing the code. Sometimes the test setup is the problem, not the feature itself.</p>
+
+<p><strong>Tom:</strong> I’ll do that. I used to see a failed test and immediately assume I’d broken the app. Now I’m trying to check what the test expected, what it got, and whether the test data was set up correctly.</p>
+
+<p><strong>Alice:</strong> That’s a good habit. The main thing is to work out what the failure is telling you before you jump to a fix. It saves time, and it often stops you from changing code that was already working.</p>
+
+<p><strong>Tom:</strong> I’ve also added a short section to the README about running the tests. Could you try following it when you have a minute? I want to know whether the instructions make sense to someone who hasn’t set up the project before.</p>
+
+<p><strong>Alice:</strong> Sure. I’ll try it from a clean copy, not from the folder I’ve already been using. That’s a better test of the instructions because I won’t have old settings or files to help me out.</p>
+
+<p><strong>Tom:</strong> Thanks. If anything is confusing, could you tell me exactly where you got stuck? I’d rather fix the instructions than explain the same missing step to everyone who downloads the project.</p>
+
+<p><strong>Alice:</strong> Of course. And when you update the README, try to keep each step short. The thing is, a long block of instructions can be hard to follow, even if every detail is technically correct.</p>
+
+<p><strong>Tom:</strong> That makes sense. I’ll use a numbered list for setup, then a separate section for the database and tests. I’ll also add a quick note about the known limitation: the first request can be slow on the free hosting plan.</p>
+
+<p><strong>Alice:</strong> That’s useful to know. Just to be clear, mention that it’s a limitation of the test hosting, not a problem you’ve measured in the database. That way, people won’t assume you’ve found a performance issue you haven’t actually confirmed.</p>
+
+<p><strong>Tom:</strong> Right, I’ll phrase it carefully. I’m learning that it’s better to say what I tested and what I observed than to make a broad claim like “the app is fast” or “the database is reliable.”</p>
+
+<p><strong>Alice:</strong> Exactly. You can be confident and still be precise. Say what works, explain how you checked it, and mention what you haven’t tested yet. That makes the project easier to trust.</p>
+
+<p><strong>Tom:</strong> I’ll finish the test setup, try restoring a backup, and then ask you to check the README. That’s enough for this week. The thing is, I keep thinking of extra features, but I’d rather make the current version easier to set up and safer to test first.</p>
+
+<p><strong>Alice:</strong> That sounds like a sensible plan. Finish those things, then see what feedback you get. You don’t have to do everything at once; it’s better to make a few useful improvements and understand them properly.</p>
+
+<p><strong>Tom:</strong> Thanks, Alice. I’ll send you the updated link when the tests are passing consistently. And if the app does go down again, at least I’ll know what to check first.</p>
+
+<p><strong>Alice:</strong> That’s the idea. Check the logs, confirm whether the database is available, and write down what happened before changing anything. And after all that, we’re definitely getting coffee without opening our laptops.</p>
+
+<p><strong>Tom:</strong> Deal. Just to be clear, we’re not allowed to talk about migrations either?</p>
+
+<p><strong>Alice:</strong> We can talk about them for five minutes. After that, I’m changing the subject.</p>
+
+<!-- ...existing code... -->
+``````<!-- filepath: /Users/avanti/Documents/projects/GitHub/english/dbs-d2.html -->
+<!-- Insert before </article> -->
+
+<p><strong>Tom:</strong> Hey, Alice, remember when you said I could text you if the app went down? It didn’t go down, exactly, but I got an error page this morning and couldn’t tell whether the database was offline or the app had failed to start.</p>
+
+<p><strong>Alice:</strong> That sounds frustrating. Did you check the server logs, or did you just see the error in the browser?</p>
+
+<p><strong>Tom:</strong> I checked the logs, and they showed that the app couldn’t connect to the database. The thing is, the database itself was running, but the connection timed out. I restarted the app and it worked again, but I’d like to understand what caused it before I call it fixed.</p>
+
+<p><strong>Alice:</strong> That makes sense. Restarting can get things working again, but it doesn’t always tell you what went wrong. Did the logs show how long the app waited before giving up?</p>
+
+<p><strong>Tom:</strong> They did. It waited for about thirty seconds, which seems like a long time for a page to load. I’m thinking about adding a clearer error message and a shorter timeout, but I don’t want to hide a real database problem from myself.</p>
+
+<p><strong>Alice:</strong> I see what you mean. A user-friendly message is important, but you still want enough detail in the logs to investigate the problem. You could show a simple message on the page, then record the technical details on the server.</p>
+
+<p><strong>Tom:</strong> Right, so the user sees something like, “We couldn’t load your orders. Please try again in a moment,” while I can check the logs for the actual error. Just to be clear, I shouldn’t show the database connection details on the page, should I?</p>
+
+<p><strong>Alice:</strong> Definitely not. Those details can reveal information you don’t want to share. Keep the message simple, and make sure the server log doesn’t include passwords or other secrets either.</p>
+
+<p><strong>Tom:</strong> Good point. I’ll check what the app is logging now. The thing is, I added a few debug messages while I was testing, and I’m not sure which ones are still useful and which ones are just noise.</p>
+
+<p><strong>Alice:</strong> That happens. Keep the messages that help you understand important events, like a failed database connection or an order that couldn’t be saved. You can remove messages that repeat the same information on every request. The main thing is to make the useful details easy to find when something goes wrong.</p>
+
+<p><strong>Tom:</strong> That makes sense. I’ll use different levels for normal information, warnings, and errors, so I don’t have to search through every small message. I also want to add a simple health check to see whether the app can reach the database.</p>
+
+<p><strong>Alice:</strong> That could help. Just to be clear, a health check should tell you whether the important parts of the app are available, but it shouldn’t return private information about the database. A basic “ready” or “not ready” response is usually enough.</p>
+
+<p><strong>Tom:</strong> Got it. I’ll make the response simple and keep the details in the logs. I’m also going to test what happens if the database is temporarily unavailable. Right now, I’ve only tested the app when everything is working.</p>
+
+<p><strong>Alice:</strong> That’s a good idea. The thing is, errors are part of the normal flow too, even if you hope users never see them. Try disconnecting the test database and check whether the app fails safely instead of hanging or showing a confusing page.</p>
+
+<p><strong>Tom:</strong> I see what you mean. I can use the test environment for that, so I won’t risk changing anything in the live database. I’ll check that the page responds quickly, shows a clear message, and doesn’t create a half-saved order.</p>
+
+<p><strong>Alice:</strong> Exactly. And after that, check that the app works again once the database is available. It’s easy to test the failure and forget to test recovery.</p>
+
+<p><strong>Tom:</strong> That’s fair. I’ll test both situations: when the database is unavailable and when the connection comes back. Just to be clear, I should also check the logs to make sure the failed request is recorded once, not over and over?</p>
+
+<p><strong>Alice:</strong> Yes, that’s worth checking. If one problem creates hundreds of repeated log messages, it can make the real issue harder to spot. The thing is, logging should help you understand what happened, not make it more difficult.</p>
+
+<p><strong>Tom:</strong> I’ll keep that in mind. I’ve also been thinking about backups. I have a backup command working locally, but I haven’t tried restoring from it yet. I guess a backup isn’t very useful if I don’t know whether it can be restored.</p>
+
+<p><strong>Alice:</strong> Exactly. Try restoring it to a separate test database and check that the orders and products are there. That makes sense as a first check, and it gives you more confidence than just seeing a file appear on your computer.</p>
+
+<p><strong>Tom:</strong> I see what you mean. I’ll make a backup, restore it somewhere safe, and compare a few records. I won’t test the restore on the live database, of course.</p>
+
+<p><strong>Alice:</strong> Good. And write down the steps once you’ve confirmed they work. Just to be clear, you don’t need a huge recovery manual for a practice app, but you should know where the backup is and how to use it.</p>
+
+<p><strong>Tom:</strong> That makes sense. I’ll add a short note to the README and include when the backup was created. I’ll also make sure the backup file isn’t accidentally pushed to Git if it contains real data.</p>
+
+<p><strong>Alice:</strong> Good call. Sample data is one thing, but real user data needs much more care. The thing is, it’s easy to focus on getting the app working and forget that data needs protection too.</p>
+
+<p><strong>Tom:</strong> You’re right. I’ll keep the project’s test data separate and check the `.gitignore` file. I’ll also remove any old local database files before I share the repository.</p>
+
+<p><strong>Alice:</strong> Sounds good. How are the automated tests going, by the way? Did you manage to get them running when you push a change?</p>
+
+<p><strong>Tom:</strong> I did, more or less. The tests run automatically now, and they catch the basic mistakes. The thing is, one test passes on my laptop but fails in the automated run, so I’m trying to work out what’s different between the two environments.</p>
+
+<p><strong>Alice:</strong> That can happen if the test depends on something that only exists on your computer, like a local setting or a piece of sample data. Does the failure message point to a particular test?</p>
+
+<p><strong>Tom:</strong> Yes, it says a product wasn’t found. I think I forgot to add that product to the test setup. Locally, it was already in my database from an earlier test, so everything looked fine.</p>
+
+<p><strong>Alice:</strong> I see what you mean. The test should create the data it needs instead of depending on what happens to be in your local database. That way, it should behave the same way each time and on another computer.</p>
+
+<p><strong>Tom:</strong> Right. I’ll update the test so it creates its own product and order before checking the result. Then I’ll run it a few times to make sure it doesn’t rely on leftover data.</p>
+
+<p><strong>Alice:</strong> That makes sense. A test that passes only because of old data can give you a false sense of confidence. Just to be clear, are you resetting the test database between runs?</p>
+
+<p><strong>Tom:</strong> I wasn’t, but I’ll add that. I can clear the test data before each run and then create exactly what the test needs. It should make the results more predictable.</p>
+
+<p><strong>Alice:</strong> Exactly. And if a test still fails, read the error message carefully before changing the code. Sometimes the test setup is the problem, not the feature itself.</p>
+
+<p><strong>Tom:</strong> I’ll do that. I used to see a failed test and immediately assume I’d broken the app. Now I’m trying to check what the test expected, what it got, and whether the test data was set up correctly.</p>
+
+<p><strong>Alice:</strong> That’s a good habit. The main thing is to work out what the failure is telling you before you jump to a fix. It saves time, and it often stops you from changing code that was already working.</p>
+
+<p><strong>Tom:</strong> I’ve also added a short section to the README about running the tests. Could you try following it when you have a minute? I want to know whether the instructions make sense to someone who hasn’t set up the project before.</p>
+
+<p><strong>Alice:</strong> Sure. I’ll try it from a clean copy, not from the folder I’ve already been using. That’s a better test of the instructions because I won’t have old settings or files to help me out.</p>
+
+<p><strong>Tom:</strong> Thanks. If anything is confusing, could you tell me exactly where you got stuck? I’d rather fix the instructions than explain the same missing step to everyone who downloads the project.</p>
+
+<p><strong>Alice:</strong> Of course. And when you update the README, try to keep each step short. The thing is, a long block of instructions can be hard to follow, even if every detail is technically correct.</p>
+
+<p><strong>Tom:</strong> That makes sense. I’ll use a numbered list for setup, then a separate section for the database and tests. I’ll also add a quick note about the known limitation: the first request can be slow on the free hosting plan.</p>
+
+<p><strong>Alice:</strong> That’s useful to know. Just to be clear, mention that it’s a limitation of the test hosting, not a problem you’ve measured in the database. That way, people won’t assume you’ve found a performance issue you haven’t actually confirmed.</p>
+
+<p><strong>Tom:</strong> Right, I’ll phrase it carefully. I’m learning that it’s better to say what I tested and what I observed than to make a broad claim like “the app is fast” or “the database is reliable.”</p>
+
+<p><strong>Alice:</strong> Exactly. You can be confident and still be precise. Say what works, explain how you checked it, and mention what you haven’t tested yet. That makes the project easier to trust.</p>
+
+<p><strong>Tom:</strong> I’ll finish the test setup, try restoring a backup, and then ask you to check the README. That’s enough for this week. The thing is, I keep thinking of extra features, but I’d rather make the current version easier to set up and safer to test first.</p>
+
+<p><strong>Alice:</strong> That sounds like a sensible plan. Finish those things, then see what feedback you get. You don’t have to do everything at once; it’s better to make a few useful improvements and understand them properly.</p>
+
+<p><strong>Tom:</strong> Thanks, Alice. I’ll send you the updated link when the tests are passing consistently. And if the app does go down again, at least I’ll know what to check first.</p>
+
+<p><strong>Alice:</strong> That’s the idea. Check the logs, confirm whether the database is available, and write down what happened before changing anything. And after all that, we’re definitely getting coffee without opening our laptops.</p>
+
+<p><strong>Tom:</strong> Deal. Just to be clear, we’re not allowed to talk about migrations either?</p>
+
+<p><strong>Alice:</strong> We can talk about them for five minutes. After that, I’m changing the subject.</p>
+
 
 </article>
 
