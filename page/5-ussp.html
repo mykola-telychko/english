@@ -172,7 +172,89 @@ transcript from: https://millercenter.org/the-presidency/presidential-speeches/d
                 <p><strong>Mike:</strong> Right — and that’s a strategic claim as much as a moral one: stability through mutual restraint rather than unilateral advantage.</p>
                 <p><strong>Julia:</strong> Notice how he mixes proverbial language with concrete numbers; it’s a rhetorical move to make technical disarmament feel human and urgent.</p>
                 <p><strong>Mike:</strong> That’s an important observation. He’s bridging the gap between abstract policy and public sentiment, which strengthens the political case.</p>
-                <p><strong>Julia:</strong> There’s also a subtle normative judgment here — the treaty is presented as both pragmatic policy and a moral duty to future generations.</p>
+                <p><strong>Julia:</strong> The                <!-- ...existing code... -->
+                
+                <p><strong>Tom:</strong> So, I know we said no laptops, but I have one quick update. I tried the migration on my test database, and it worked. The thing is, it failed the first time because I was using an older version of the setup script.</p>
+                
+                <p><strong>Alice:</strong> That makes sense. If the script and the migration expect different versions of the database, they can get out of sync. Did you update the script, or did you start with a fresh test database?</p>
+                
+                <p><strong>Tom:</strong> I started with a fresh one first, just to see what would happen. Then I tried the migration on a database with sample orders, and the data was still there afterwards. I see what you mean about testing both cases; the fresh setup alone didn’t tell me whether existing data would be safe.</p>
+                
+                <p><strong>Alice:</strong> Nice. Just to be clear, did you check that the new column has the right value for orders that already existed?</p>
+                
+                <p><strong>Tom:</strong> I did. I gave it a default value for the old records, and then I created a new order to check that the app saved the price correctly. The thing is, I nearly forgot to test a new order after the migration. I was so focused on the old data that I didn’t check the normal flow.</p>
+                
+                <p><strong>Alice:</strong> That happens. A change can work for existing records and still cause trouble when someone creates something new. It’s good that you caught it before deploying. Did you write down the migration steps?</p>
+                
+                <p><strong>Tom:</strong> Yeah, they’re in the README now. I also added a note saying to back up the database before running the migration. That makes sense for a real deployment, even if this is only a small project.</p>
+                
+                <p><strong>Alice:</strong> Definitely. And before you run it on a live database, make sure you know how you’d restore the backup. Just to be clear, having a backup file is only part of the plan; you also need to know that it can be restored.</p>
+                
+                <p><strong>Tom:</strong> Right, I tested that too. I restored the backup to a separate database and checked a few orders. I see what you mean now—it’s better to find out whether the backup works while everything is calm, not when something has already gone wrong.</p>
+                
+                <p><strong>Alice:</strong> Exactly. So, what’s next? Are you going to add more features, or are you happy with the app for now?</p>
+                
+                <p><strong>Tom:</strong> For now, I want to make the setup easier and check the app on a couple of browsers. I was thinking about adding user accounts, but the thing is, that would mean dealing with passwords and private data, and I’m not ready to take that on yet.</p>
+                
+                <p><strong>Alice:</strong> That makes sense. User accounts sound like a small feature, but they bring extra work: password handling, password resets, permissions, and protecting personal data. You can keep it on your list and build it later, once the rest of the app is solid.</p>
+                
+                <p><strong>Tom:</strong> That’s what I figured. I’d rather finish the current version properly than add something I can’t support well. Just to be clear, it’s okay for a portfolio project to have a few known limitations, as long as I explain them?</p>
+                
+                <p><strong>Alice:</strong> Of course. Be clear about what the app can do and what you haven’t built yet. I see what you mean about wanting it to look complete, but a realistic project description is better than claiming it can do things it doesn’t actually do.</p>
+                
+                <p><strong>Tom:</strong> I’ll update the project page, then. I’ll say that it supports creating and viewing orders, but it doesn’t have user accounts or online payments. The thing is, I used to think limitations made a project look weak, but now I think it’s more useful to explain them than to pretend they aren’t there.</p>
+                
+                <p><strong>Alice:</strong> That’s a good way to look at it. People want to understand what you built, what decisions you made, and what you’d improve next. If you can explain those things clearly, the project can still make a strong impression.</p>
+                
+                <p><strong>Tom:</strong> Thanks. I’ll finish the browser checks this weekend and send you the updated link. If you notice anything confusing, just tell me what you expected to happen and what happened instead. That’s the kind of feedback I can actually use.</p>
+                
+                <p><strong>Alice:</strong> Sounds good. And after that, we can talk about something that doesn’t involve databases, deployments, or README files. The thing is, even developers need a break from debugging sometimes.</p>
+                
+                <p><strong>Tom:</strong> Absolutely. Let’s get coffee next week, and I promise I won’t open my laptop. Unless the app goes down again, of course.</p>
+                
+                <p><strong>Alice:</strong> I knew you were going to say that. Fine—but only after we’ve ordered.</p>
+                
+                
+                <p><strong>Tom:</strong> So, I know we said no laptops, but I have one quick update. I tried the migration on my test database, and it worked. The thing is, it failed the first time because I was using an older version of the setup script.</p>
+                
+                <p><strong>Alice:</strong> That makes sense. If the script and the migration expect different versions of the database, they can get out of sync. Did you update the script, or did you start with a fresh test database?</p>
+                
+                <p><strong>Tom:</strong> I started with a fresh one first, just to see what would happen. Then I tried the migration on a database with sample orders, and the data was still there afterwards. I see what you mean about testing both cases; the fresh setup alone didn’t tell me whether existing data would be safe.</p>
+                
+                <p><strong>Alice:</strong> Nice. Just to be clear, did you check that the new column has the right value for orders that already existed?</p>
+                
+                <p><strong>Tom:</strong> I did. I gave it a default value for the old records, and then I created a new order to check that the app saved the price correctly. The thing is, I nearly forgot to test a new order after the migration. I was so focused on the old data that I didn’t check the normal flow.</p>
+                
+                <p><strong>Alice:</strong> That happens. A change can work for existing records and still cause trouble when someone creates something new. It’s good that you caught it before deploying. Did you write down the migration steps?</p>
+                
+                <p><strong>Tom:</strong> Yeah, they’re in the README now. I also added a note saying to back up the database before running the migration. That makes sense for a real deployment, even if this is only a small project.</p>
+                
+                <p><strong>Alice:</strong> Definitely. And before you run it on a live database, make sure you know how you’d restore the backup. Just to be clear, having a backup file is only part of the plan; you also need to know that it can be restored.</p>
+                
+                <p><strong>Tom:</strong> Right, I tested that too. I restored the backup to a separate database and checked a few orders. I see what you mean now—it’s better to find out whether the backup works while everything is calm, not when something has already gone wrong.</p>
+                
+                <p><strong>Alice:</strong> Exactly. So, what’s next? Are you going to add more features, or are you happy with the app for now?</p>
+                
+                <p><strong>Tom:</strong> For now, I want to make the setup easier and check the app on a couple of browsers. I was thinking about adding user accounts, but the thing is, that would mean dealing with passwords and private data, and I’m not ready to take that on yet.</p>
+                
+                <p><strong>Alice:</strong> That makes sense. User accounts sound like a small feature, but they bring extra work: password handling, password resets, permissions, and protecting personal data. You can keep it on your list and build it later, once the rest of the app is solid.</p>
+                
+                <p><strong>Tom:</strong> That’s what I figured. I’d rather finish the current version properly than add something I can’t support well. Just to be clear, it’s okay for a portfolio project to have a few known limitations, as long as I explain them?</p>
+                
+                <p><strong>Alice:</strong> Of course. Be clear about what the app can do and what you haven’t built yet. I see what you mean about wanting it to look complete, but a realistic project description is better than claiming it can do things it doesn’t actually do.</p>
+                
+                <p><strong>Tom:</strong> I’ll update the project page, then. I’ll say that it supports creating and viewing orders, but it doesn’t have user accounts or online payments. The thing is, I used to think limitations made a project look weak, but now I think it’s more useful to explain them than to pretend they aren’t there.</p>
+                
+                <p><strong>Alice:</strong> That’s a good way to look at it. People want to understand what you built, what decisions you made, and what you’d improve next. If you can explain those things clearly, the project can still make a strong impression.</p>
+                
+                <p><strong>Tom:</strong> Thanks. I’ll finish the browser checks this weekend and send you the updated link. If you notice anything confusing, just tell me what you expected to happen and what happened instead. That’s the kind of feedback I can actually use.</p>
+                
+                <p><strong>Alice:</strong> Sounds good. And after that, we can talk about something that doesn’t involve databases, deployments, or README files. The thing is, even developers need a break from debugging sometimes.</p>
+                
+                <p><strong>Tom:</strong> Absolutely. Let’s get coffee next week, and I promise I won’t open my laptop. Unless the app goes down again, of course.</p>
+                
+                <p><strong>Alice:</strong> I knew you were going to say that. Fine—but only after we’ve ordered.</p>
+                
                 <p><strong>Mike:</strong> And he assumes publics will accept verification measures if they see them as reciprocal and fair, not as concessions to an adversary.</p>
                 <p><strong>Julia:</strong> The underlying implication is clear: if both sides commit credibly, the balance of fear can be transformed into a balance of security.</p>
                 <p><strong>Mike:</strong> Which is essentially a hopeful prediction — that institutions and procedures can outlast partisan cycles and build trust.</p>
