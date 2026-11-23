@@ -269,7 +269,9 @@
     let isPlaying = false;
     let voiceEnabled = true;
     let speedMultiplier = parseFloat(speedSlider.value);
-      let activeUtterance = null;
+    let activeUtterance = null;
+    let speechTimerId = null;
+    let speechRequestId = 0;
 
     if ('speechSynthesis' in window) {
       window.speechSynthesis.getVoices();
@@ -279,37 +281,20 @@
     }
 
     function speakPhrase(text) {
-      // if (!('speechSynthesis' in window) || !voiceEnabled) return;
-
-      // window.speechSynthesis.cancel();
-      // const utterance = new SpeechSynthesisUtterance(text);
-      // utterance.lang = 'en-US';
-      // utterance.rate = 0.95;
-      // utterance.pitch = 1.0;
-
-      // const voices = window.speechSynthesis.getVoices();
-      // const enVoice = voices.find(v => v.lang.toLowerCase().startsWith('en'));
-      // if (enVoice) {
-      //   utterance.voice = enVoice;
-      // }
-
-      // window.speechSynthesis.speak(utterance);
-
-
       if (!('speechSynthesis' in window) || !voiceEnabled) return;
 
       const synth = window.speechSynthesis;
+      const requestId = ++speechRequestId;
 
-      // Якщо рушій застряг у стані speaking/pending — перезапускаємо чергу
-      if (synth.paused) {
-        synth.resume();
+      if (speechTimerId !== null) {
+        clearTimeout(speechTimerId);
+        speechTimerId = null;
       }
-      if (synth.speaking || synth.pending) {
-        synth.cancel();
-      }
+
+      synth.cancel();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      activeUtterance = utterance; // Утримуємо посилання до кінця відтворення
+      activeUtterance = utterance;
 
       utterance.lang = 'en-US';
       utterance.rate = 0.95;
@@ -320,29 +305,23 @@
       const enVoice =
         voices.find(v => v.lang === 'en-US') ||
         voices.find(v => v.lang.toLowerCase().startsWith('en'));
-      if (enVoice) {
-        utterance.voice = enVoice;
-      }
+      if (enVoice) utterance.voice = enVoice;
 
       utterance.onend = () => {
-        if (activeUtterance === utterance) {
-          activeUtterance = null;
-        }
+        if (activeUtterance === utterance) activeUtterance = null;
       };
 
       utterance.onerror = (event) => {
         console.warn('SpeechSynthesis error:', event.error);
-        if (activeUtterance === utterance) {
-          activeUtterance = null;
-        }
+        if (activeUtterance === utterance) activeUtterance = null;
       };
 
-      // Невелика затримка після cancel() у Chromium допомагає уникнути пропуску фрази
-      setTimeout(() => {
-        if (!voiceEnabled) return;
+      // Chromium can ignore a fresh utterance if cancel() and speak() happen in the same turn.
+      speechTimerId = setTimeout(() => {
+        speechTimerId = null;
+        if (!voiceEnabled || requestId !== speechRequestId) return;
         synth.speak(utterance);
-      }, 30);
-
+      }, 50);
     }
 
     speedSlider.addEventListener('input', () => {
