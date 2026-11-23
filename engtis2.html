@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typing Tetris + Speed Equalizer + Voice</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .header {
+      width: 800px;
+      max-width: 95vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e1e1e;
+      padding: 15px 25px;
+      border-radius: 10px 10px 0 0;
+      border: 1px solid #333;
+      border-bottom: none;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .scoreboard {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .correct { color: #4caf50; }
+    .incorrect { color: #f44336; }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    button, .file-label {
+      background: #2979ff;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+
+    button:hover, .file-label:hover {
+      background: #1565c0;
+    }
+
+    button.muted {
+      background: #424242;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* Horizontal Speed Equalizer */
+    .speed-bar {
+      width: 800px;
+      max-width: 95vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: #1a1a1a;
+      padding: 10px 25px;
+      border-left: 1px solid #333;
+      border-right: 1px solid #333;
+      border-top: 1px solid #2a2a2a;
+      font-size: 0.95rem;
+    }
+
+    .speed-label {
+      white-space: nowrap;
+      color: #cfcfcf;
+    }
+
+    .speed-value {
+      font-weight: bold;
+      color: #4fc3f7;
+      min-width: 52px;
+      text-align: right;
+    }
+
+    input[type="range"].horizontal-eq {
+      -webkit-appearance: none;
+      appearance: none;
+      flex: 1;
+      height: 10px;
+      border-radius: 6px;
+      background: linear-gradient(90deg, #00bcd4 0%, #2979ff 30%, #4caf50 60%, #ff9800 100%);
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"].horizontal-eq::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #2979ff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+    }
+
+    input[type="range"].horizontal-eq::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #2979ff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      cursor: pointer;
+    }
+
+    #game-area {
+      position: relative;
+      width: 800px;
+      max-width: 95vw;
+      height: 460px;
+      background: #181818;
+      border: 1px solid #333;
+      overflow: hidden;
+    }
+
+    .falling-phrase {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #252526;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      font-size: 1.3rem;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      user-select: none;
+    }
+
+    .char-matched {
+      color: #4caf50;
+      font-weight: bold;
+    }
+
+    .char-unmatched {
+      color: #e0e0e0;
+    }
+
+    .input-container {
+      width: 800px;
+      max-width: 95vw;
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 0 0 10px 10px;
+      border: 1px solid #333;
+      border-top: none;
+    }
+
+    #typing-input {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1.2rem;
+      background: #2c2c2c;
+      border: 2px solid #444;
+      border-radius: 6px;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    #typing-input:focus {
+      border-color: #2979ff;
+    }
+
+    #typing-input.error {
+      border-color: #f44336;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="scoreboard">
+      Score (correct <span id="correct-count" class="correct">0</span> incorrect <span id="incorrect-count" class="incorrect">0</span>)
+    </div>
+    <div class="controls">
+      <button id="voice-btn" title="Toggle voice pronunciation">🔊 Voice: On</button>
+      <label class="file-label">
+        Load JSON
+        <input type="file" id="json-upload" accept=".json">
+      </label>
+      <button id="start-btn">Start / Restart</button>
+    </div>
+  </div>
+
+  <div class="speed-bar">
+    <span class="speed-label">Speed Multiplier (0.1x – 2.5x):</span>
+    <input
+      type="range"
+      id="speed-slider"
+      class="horizontal-eq"
+      min="0.1"
+      max="2.5"
+      step="0.1"
+      value="1.0"
+      aria-label="Falling speed multiplier"
+    >
+    <span id="speed-display" class="speed-value">1.0x</span>
+  </div>
+
+  <div id="game-area"></div>
+
+  <div class="input-container">
+    <input type="text" id="typing-input" placeholder="Click 'Start / Restart' and type the phrase..." disabled autocomplete="off" spellcheck="false">
+  </div>
+
+  <script>
+    let phrases = [
+      "Hello world",
+      "Time is money",
+      "Practice makes perfect",
+      "Never give up on your dreams",
+      "The quick brown fox jumps over the lazy dog",
+      "Actions speak louder than words",
+      "Knowledge is power",
+      "Better late than never"
+    ];
+
+    const gameArea = document.getElementById('game-area');
+    const typingInput = document.getElementById('typing-input');
+    const correctDisplay = document.getElementById('correct-count');
+    const incorrectDisplay = document.getElementById('incorrect-count');
+    const startBtn = document.getElementById('start-btn');
+    const voiceBtn = document.getElementById('voice-btn');
+    const jsonUpload = document.getElementById('json-upload');
+    const speedSlider = document.getElementById('speed-slider');
+    const speedDisplay = document.getElementById('speed-display');
+
+    let correctScore = 0;
+    let incorrectScore = 0;
+    let activePhraseObj = null;
+    let animationFrameId = null;
+    let lastTimestamp = 0;
+    let isPlaying = false;
+    let voiceEnabled = true;
+    let speedMultiplier = parseFloat(speedSlider.value);
+      let activeUtterance = null;
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+
+    function speakPhrase(text) {
+      // if (!('speechSynthesis' in window) || !voiceEnabled) return;
+
+      // window.speechSynthesis.cancel();
+      // const utterance = new SpeechSynthesisUtterance(text);
+      // utterance.lang = 'en-US';
+      // utterance.rate = 0.95;
+      // utterance.pitch = 1.0;
+
+      // const voices = window.speechSynthesis.getVoices();
+      // const enVoice = voices.find(v => v.lang.toLowerCase().startsWith('en'));
+      // if (enVoice) {
+      //   utterance.voice = enVoice;
+      // }
+
+      // window.speechSynthesis.speak(utterance);
+
+
+      if (!('speechSynthesis' in window) || !voiceEnabled) return;
+
+      const synth = window.speechSynthesis;
+
+      // Якщо рушій застряг у стані speaking/pending — перезапускаємо чергу
+      if (synth.paused) {
+        synth.resume();
+      }
+      if (synth.speaking || synth.pending) {
+        synth.cancel();
+      }
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      activeUtterance = utterance; // Утримуємо посилання до кінця відтворення
+
+      utterance.lang = 'en-US';
+      utterance.rate = 0.95;
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+
+      const voices = synth.getVoices();
+      const enVoice =
+        voices.find(v => v.lang === 'en-US') ||
+        voices.find(v => v.lang.toLowerCase().startsWith('en'));
+      if (enVoice) {
+        utterance.voice = enVoice;
+      }
+
+      utterance.onend = () => {
+        if (activeUtterance === utterance) {
+          activeUtterance = null;
+        }
+      };
+
+      utterance.onerror = (event) => {
+        console.warn('SpeechSynthesis error:', event.error);
+        if (activeUtterance === utterance) {
+          activeUtterance = null;
+        }
+      };
+
+      // Невелика затримка після cancel() у Chromium допомагає уникнути пропуску фрази
+      setTimeout(() => {
+        if (!voiceEnabled) return;
+        synth.speak(utterance);
+      }, 30);
+
+    }
+
+    speedSlider.addEventListener('input', () => {
+      speedMultiplier = parseFloat(speedSlider.value);
+      speedDisplay.textContent = `${speedMultiplier.toFixed(1)}x`;
+
+      if (activePhraseObj) {
+        activePhraseObj.speed = calculateSpeed(activePhraseObj.text);
+      }
+    });
+
+    voiceBtn.addEventListener('click', () => {
+      voiceEnabled = !voiceEnabled;
+      voiceBtn.textContent = voiceEnabled ? '🔊 Voice: On' : '🔇 Voice: Off';
+      voiceBtn.classList.toggle('muted', !voiceEnabled);
+      if (!voiceEnabled && 'speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    });
+
+    fetch('phrases.json')
+      .then(response => {
+        if (!response.ok) throw new Error('JSON not found');
+        return response.json();
+      })
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          phrases = data;
+        }
+      })
+      .catch(() => {});
+
+    jsonUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const parsed = JSON.parse(event.target.result);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            phrases = parsed;
+            alert(`Loaded ${phrases.length} phrases!`);
+            if (isPlaying) startGame();
+          } else {
+            alert('JSON must contain an array of strings!');
+          }
+        } catch (err) {
+          alert('Error reading JSON file.');
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    function calculateSpeed(text) {
+      const baseFactor = 1200;
+      const minSpeed = 20;
+      const maxSpeed = 140;
+      const rawSpeed = baseFactor / (text.length + 3);
+      const clampedBase = Math.max(minSpeed, Math.min(maxSpeed, rawSpeed));
+      return clampedBase * speedMultiplier;
+    }
+
+    function spawnPhrase() {
+      gameArea.innerHTML = '';
+
+      const randomText = phrases[Math.floor(Math.random() * phrases.length)];
+      const el = document.createElement('div');
+      el.className = 'falling-phrase';
+      el.innerHTML = `<span class="char-unmatched">${randomText}</span>`;
+      el.style.top = '0px';
+
+      gameArea.appendChild(el);
+
+      activePhraseObj = {
+        text: randomText,
+        element: el,
+        y: 0,
+        speed: calculateSpeed(randomText)
+      };
+
+      typingInput.value = '';
+      typingInput.classList.remove('error');
+      typingInput.focus();
+    }
+
+    function updateScoreUI() {
+      correctDisplay.textContent = correctScore;
+      incorrectDisplay.textContent = incorrectScore;
+    }
+
+    function gameLoop(timestamp) {
+      if (!isPlaying) return;
+
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const deltaTime = (timestamp - lastTimestamp) / 1000;
+      lastTimestamp = timestamp;
+
+      if (activePhraseObj) {
+        activePhraseObj.y += activePhraseObj.speed * deltaTime;
+        activePhraseObj.element.style.top = `${activePhraseObj.y}px`;
+
+        const maxBottom = gameArea.clientHeight - activePhraseObj.element.offsetHeight;
+        if (activePhraseObj.y >= maxBottom) {
+          incorrectScore++;
+          updateScoreUI();
+          spawnPhrase();
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(gameLoop);
+    }
+
+    typingInput.addEventListener('input', () => {
+      if (!activePhraseObj || !isPlaying) return;
+
+      const typed = typingInput.value;
+      const target = activePhraseObj.text;
+
+      if (typed === target) {
+        correctScore++;
+        updateScoreUI();
+        speakPhrase(target);
+        spawnPhrase();
+        return;
+      }
+
+      if (target.startsWith(typed)) {
+        typingInput.classList.remove('error');
+        const matchedPart = target.slice(0, typed.length);
+        const remainingPart = target.slice(typed.length);
+        activePhraseObj.element.innerHTML =
+          `<span class="char-matched">${matchedPart}</span><span class="char-unmatched">${remainingPart}</span>`;
+      } else {
+        typingInput.classList.add('error');
+      }
+    });
+
+    function startGame() {
+      cancelAnimationFrame(animationFrameId);
+      correctScore = 0;
+      incorrectScore = 0;
+      updateScoreUI();
+      isPlaying = true;
+      typingInput.disabled = false;
+      typingInput.placeholder = "Type the phrase...";
+      lastTimestamp = 0;
+      spawnPhrase();
+      animationFrameId = requestAnimationFrame(gameLoop);
+    }
+
+    startBtn.addEventListener('click', startGame);
+  </script>
+</body>
+</html>

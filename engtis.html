@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typing Tetris</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Панель рахунку */
+    .header {
+      width: 800px;
+      max-width: 95vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1e1e1e;
+      padding: 15px 25px;
+      border-radius: 10px 10px 0 0;
+      border: 1px solid #333;
+      border-bottom: none;
+    }
+
+    .scoreboard {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .correct { color: #4caf50; }
+    .incorrect { color: #f44336; }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    button, .file-label {
+      background: #2979ff;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+
+    button:hover, .file-label:hover {
+      background: #1565c0;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* Ігрове поле */
+    #game-area {
+      position: relative;
+      width: 800px;
+      max-width: 95vw;
+      height: 500px;
+      background: #181818;
+      border: 1px solid #333;
+      overflow: hidden;
+    }
+
+    /* Падаюча фраза */
+    .falling-phrase {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #252526;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      font-size: 1.3rem;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      user-select: none;
+    }
+
+    .char-matched {
+      color: #4caf50;
+      font-weight: bold;
+    }
+
+    .char-unmatched {
+      color: #e0e0e0;
+    }
+
+    /* Поле вводу */
+    .input-container {
+      width: 800px;
+      max-width: 95vw;
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 0 0 10px 10px;
+      border: 1px solid #333;
+      border-top: none;
+    }
+
+    #typing-input {
+      width: 100%;
+      padding: 12px 15px;
+      font-size: 1.2rem;
+      background: #2c2c2c;
+      border: 2px solid #444;
+      border-radius: 6px;
+      color: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    #typing-input:focus {
+      border-color: #2979ff;
+    }
+
+    #typing-input.error {
+      border-color: #f44336;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="scoreboard">
+      Score (correct <span id="correct-count" class="correct">0</span> incorrect <span id="incorrect-count" class="incorrect">0</span>)
+    </div>
+    <div class="controls">
+      <label class="file-label">
+        Завантажити JSON
+        <input type="file" id="json-upload" accept=".json">
+      </label>
+      <button id="start-btn">Старт / Рестарт</button>
+    </div>
+  </div>
+
+  <div id="game-area"></div>
+
+  <div class="input-container">
+    <input type="text" id="typing-input" placeholder="Натисніть 'Старт' і друкуйте фразу..." disabled autocomplete="off" spellcheck="false">
+  </div>
+
+  <script>
+    // Запасний масив фраз (якщо файл відкрито без сервера)
+    let phrases = [
+      "Hello world",
+      "Time is money",
+      "Practice makes perfect",
+      "Never give up on your dreams",
+      "The quick brown fox jumps over the lazy dog",
+      "Actions speak louder than words",
+      "Knowledge is power",
+      "Better late than never"
+    ];
+
+    const gameArea = document.getElementById('game-area');
+    const typingInput = document.getElementById('typing-input');
+    const correctDisplay = document.getElementById('correct-count');
+    const incorrectDisplay = document.getElementById('incorrect-count');
+    const startBtn = document.getElementById('start-btn');
+    const jsonUpload = document.getElementById('json-upload');
+
+    let correctScore = 0;
+    let incorrectScore = 0;
+    let activePhraseObj = null;
+    let animationFrameId = null;
+    let lastTimestamp = 0;
+    let isPlaying = false;
+
+    // Спроба автоматично завантажити phrases.json (працює на локальному/веб-сервері)
+    fetch('phrases.json')
+      .then(response => {
+        if (!response.ok) throw new Error('JSON not found');
+        return response.json();
+      })
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          phrases = data;
+          console.log('phrases.json успішно завантажено');
+        }
+      })
+      .catch(() => {
+        console.log('Використовується вбудований список фраз або завантажте файл вручну.');
+      });
+
+    // Завантаження JSON через кнопку
+    jsonUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const parsed = JSON.parse(event.target.result);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            phrases = parsed;
+            alert(`Завантажено ${phrases.length} фраз!`);
+            if (isPlaying) startGame();
+          } else {
+            alert('JSON повинен містити масив рядків!');
+          }
+        } catch (err) {
+          alert('Помилка читання JSON файлу.');
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    // Розрахунок швидкості залежно від довжини фрази
+    function calculateSpeed(text) {
+      // Базова константа: чим довший текст, тим менша швидкість (пікселів за секунду)
+      // Наприклад, для 10 символів швидкість ~110 px/s, для 40 символів ~35 px/s
+      const baseFactor = 1200; 
+      const minSpeed = 25;
+      const maxSpeed = 140;
+      const calculated = baseFactor / (text.length + 3);
+      return Math.max(minSpeed, Math.min(maxSpeed, calculated));
+    }
+
+    function spawnPhrase() {
+      // Видаляємо попередній елемент, якщо був
+      gameArea.innerHTML = '';
+
+      const randomText = phrases[Math.floor(Math.random() * phrases.length)];
+      const el = document.createElement('div');
+      el.className = 'falling-phrase';
+      el.innerHTML = `<span class="char-unmatched">${randomText}</span>`;
+      el.style.top = '0px';
+
+      gameArea.appendChild(el);
+
+      activePhraseObj = {
+        text: randomText,
+        element: el,
+        y: 0,
+        speed: calculateSpeed(randomText) // пікселів на секунду
+      };
+
+      typingInput.value = '';
+      typingInput.classList.remove('error');
+      typingInput.focus();
+    }
+
+    function updateScoreUI() {
+      correctDisplay.textContent = correctScore;
+      incorrectDisplay.textContent = incorrectScore;
+    }
+
+    function gameLoop(timestamp) {
+      if (!isPlaying) return;
+
+      if (!lastTimestamp) lastTimestamp = timestamp;
+      const deltaTime = (timestamp - lastTimestamp) / 1000; // у секундах
+      lastTimestamp = timestamp;
+
+      if (activePhraseObj) {
+        activePhraseObj.y += activePhraseObj.speed * deltaTime;
+        activePhraseObj.element.style.top = `${activePhraseObj.y}px`;
+
+        // Перевірка, чи досягла фраза дна
+        const maxBottom = gameArea.clientHeight - activePhraseObj.element.offsetHeight;
+        if (activePhraseObj.y >= maxBottom) {
+          incorrectScore++;
+          updateScoreUI();
+          spawnPhrase();
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(gameLoop);
+    }
+
+    // Перевірка вводу користувача в реальному часі
+    typingInput.addEventListener('input', () => {
+      if (!activePhraseObj || !isPlaying) return;
+
+      const typed = typingInput.value;
+      const target = activePhraseObj.text;
+
+      // Якщо фраза повністю введена правильно
+      if (typed === target) {
+        correctScore++;
+        updateScoreUI();
+        spawnPhrase();
+        return;
+      }
+
+      // Підсвітка правильно введеної частини
+      if (target.startsWith(typed)) {
+        typingInput.classList.remove('error');
+        const matchedPart = target.slice(0, typed.length);
+        const remainingPart = target.slice(typed.length);
+        activePhraseObj.element.innerHTML = 
+          `<span class="char-matched">${matchedPart}</span><span class="char-unmatched">${remainingPart}</span>`;
+      } else {
+        typingInput.classList.add('error');
+      }
+    });
+
+    function startGame() {
+      cancelAnimationFrame(animationFrameId);
+      correctScore = 0;
+      incorrectScore = 0;
+      updateScoreUI();
+      isPlaying = true;
+      typingInput.disabled = false;
+      typingInput.placeholder = "Друкуйте фразу...";
+      lastTimestamp = 0;
+      spawnPhrase();
+      animationFrameId = requestAnimationFrame(gameLoop);
+    }
+
+    startBtn.addEventListener('click', startGame);
+  </script>
+</body>
+</html>
